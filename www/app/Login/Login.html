@@ -1,0 +1,34 @@
+<ion-view title="Login" name="login-view">
+    <div class="bar bar-header bar-positive">
+        <h1 class="title">Login</h1>
+    </div>
+    <ion-content class="has-header">
+        <div class="row">
+            <div class="col text-center">
+                <img style="width: 50%;" src="app/images/ot-logo.png" />
+            </div>
+        </div>
+        <div class="list login-list">
+            <!-- <label class="item item-input item-floating-label">
+			<span class="input-label">URL</span>
+				<input type="text" placeholder="URL" ng-model="data.url">
+			</label> -->
+            <label class="item item-input item-floating-label">
+			<span class="input-label positive">Username</span>
+				<input type="text" placeholder="Username" ng-model="loginData.Username">
+			</label>
+            <label class="item item-input item-floating-label">
+			<span class="input-label positive">Password</span>
+				<input type="password" placeholder="Password" ng-model="loginData.Password">
+			</label>
+        </div>
+        <div class="row" ng-if="errorMessage">
+            <div class="col assertive">
+                {{errorMessage}}
+            </div>
+        </div>
+        <div class="padding">
+            <button class="button button-block button-positive" ng-click="login()">Login</button>
+        </div>
+    </ion-content>
+</ion-view>
