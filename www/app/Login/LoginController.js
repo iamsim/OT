@@ -3,17 +3,18 @@
 angular.module('officeTimerApp').controller('LoginController', function($scope, $state, LoginFactory, ionicToast) {
 
     $scope.loginData = {
-        UserName: "",
+        Username: "",
         Password: ""
     };
 
     $scope.errorMessage = null;
 
     $scope.login = function() {
-        if ($scope.loginData.UserName == "" || $scope.loginData.Password == "") {
+        if ($scope.loginData.Username == "" || $scope.loginData.Password == "") {
             ionicToast.show("Please enter username and password", 'bottom', false, 2500);
         } else {
             $scope.errorMessage = "Login successful";
+            $state.go('timeSheetView');
         }
     };
 

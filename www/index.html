@@ -16,6 +16,7 @@
     </script>-->
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="lib/ionic-toast/src/ionic-toast.css" rel="stylesheet">
+    <link rel="stylesheet" href="lib/ionic-calendar/dist/css/calendar.min.css" />
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
@@ -25,14 +26,18 @@
     <script src="lib/ionic/js/ionic.bundle.js"></script>
     <script src="lib/ionic-toast/dist/ionic-toast.bundle.min.js"></script>
     <script src="lib/moment/min/moment.min.js"></script>
+    <script src="lib/ionic-calendar/dist/js/calendar-tpls.min.js"></script>
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
     <!-- your app's js -->
     <script src="app/app.js"></script>
     <!-- controllers -->
     <script type="text/javascript" src="app/Login/LoginController.js"></script>
+    <script type="text/javascript" src="app/TimeSheetView/TimeSheetViewController.js"></script>
+    <script type="text/javascript" src="app/TimeSheetEntry/TimeSheetEntryController.js"></script>
     <!-- factories -->
     <script type="text/javascript" src="app/Login/LoginFactory.js"></script>
+    <script type="text/javascript" src="app/TimeSheetView/TimeSheetViewFactory.js"></script>
 </head>
 
 <body ng-app="officeTimerApp">

@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "ionic-toast": "^0.4.1",
-    "moment": "^2.22.1"
+    "moment": "^2.22.1",
+    "ionic-calendar": "^0.3.8"
   }
 }

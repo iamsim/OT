@@ -4,7 +4,8 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('officeTimerApp', ['ionic',
-    'ionic-toast'
+    'ionic-toast',
+    'ui.rCalendar'
 ])
 
 .run(function($ionicPlatform, $rootScope, $ionicLoading, ionicToast) {
@@ -84,6 +85,18 @@ angular.module('officeTimerApp', ['ionic',
             cache: false,
             templateUrl: 'app/Login/Login.html',
             controller: 'LoginController'
+        })
+        .state('timeSheetView', {
+            url: '/timeSheetView',
+            cache: false,
+            templateUrl: 'app/TimeSheetView/TimeSheetView.html',
+            controller: 'TimeSheetViewController'
+        })
+        .state('timeSheetEntry', {
+            url: '/timeSheetEntry',
+            cache: false,
+            templateUrl: 'app/TimeSheetEntry/TimeSheetEntry.html',
+            controller: 'TimeSheetEntryController'
         });
 
     $urlRouterProvider.otherwise('/login');
