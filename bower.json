@@ -7,6 +7,9 @@
   "dependencies": {
     "ionic-toast": "^0.4.1",
     "moment": "^2.22.1",
-    "ionic-calendar": "^0.3.8"
+    "ionic-calendar": "^0.3.8",
+    "ionic-timepicker": "^0.6.0",
+    "ionic-durationpicker": "^0.2.1",
+    "angular-timer": "^1.3.5"
   }
 }

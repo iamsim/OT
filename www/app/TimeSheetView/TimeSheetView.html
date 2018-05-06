@@ -1,6 +1,6 @@
 <ion-view name="time-sheet-view" class="time-sheet-view">
     <ion-header-bar class="bar-positive">
-        <h2 class="title">{{viewTitle}}</h2>
+        <h2 class="title">{{viewTitle}}&nbsp;({{totalHours}} hrs) Submitted</h2>
         <div class="buttons secondary">
             <button class="button button-icon ion-plus-round" ng-click="enterTimeSheet()"></button>
         </div>
@@ -15,51 +15,19 @@
         <div class="list-area">
             <div class="list">
                 <div class="item">
-                    <h2>Name</h2>
-                    <p>Value</p>
+                    <h2>ABC Software</h2>
+                    <p>Time Management System | TMS-101 [Refresh Media] | 12hr</p>
                 </div>
                 <div class="item">
-                    <h2>Name</h2>
-                    <p>Value</p>
-                </div>
-                <div class="item">
-                    <h2>Name</h2>
-                    <p>Value</p>
-                </div>
-                <div class="item">
-                    <h2>Name</h2>
-                    <p>Value</p>
-                </div>
-                <div class="item">
-                    <h2>Name</h2>
-                    <p>Value</p>
-                </div>
-                <div class="item">
-                    <h2>Name</h2>
-                    <p>Value</p>
-                </div>
-                <div class="item">
-                    <h2>Name</h2>
-                    <p>Value</p>
-                </div>
-                <div class="item">
-                    <h2>Name</h2>
-                    <p>Value</p>
-                </div>
-                <div class="item">
-                    <h2>Name</h2>
-                    <p>Value</p>
-                </div>
-                <div class="item">
-                    <h2>Name</h2>
-                    <p>Value</p>
+                    <h2>ABC Software</h2>
+                    <p>Time Management System | TMS-101 [Refresh Media] | 12hr</p>
                 </div>
             </div>
         </div>
     </ion-content>
     <div class="bar bar-footer bar-positive">
-        <!-- <button class="button button-positive" ng-click="changeMode('month')">Month</button> -->
-        <!-- <button class="button button-positive" ng-click="changeMode('week')">Week</button> -->
-        <button style="margin: auto;" class="button button-positive" ng-disabled="isToday()" ng-click="today()">Today</button>
+        <button class="button button-positive" ng-click="changeMode('month')">Month</button>
+        <button class="button button-positive" ng-click="changeMode('week')">Week</button>
+        <button class="button button-positive" ng-disabled="isToday()" ng-click="today()">Today</button>
     </div>
 </ion-view>

@@ -7,6 +7,8 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
         $scope.calendar.mode = mode;
     };
 
+    $scope.totalHours = 40;
+
     $scope.onEventSelected = function(event) {
         console.log('Event selected:' + event.startTime + '-' + event.endTime + ',' + event.title);
     };
@@ -33,7 +35,6 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
     };
 
     $scope.$watch('calendar.currentDate', function(nv, ov) {
-        console.log(nv);
         TimeSheetViewFactory.timeSheetEntryDate = nv;
     });
 

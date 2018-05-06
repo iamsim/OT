@@ -1,23 +1,87 @@
 <ion-view title="Time Sheet Entry" name="login-view">
-    <ion-nav-bar class="bar-positive"></ion-nav-bar>
+    <ion-nav-bar class="bar-positive">
+        <ion-nav-back-button></ion-nav-back-button>
+    </ion-nav-bar>
     <ion-content class="has-header">
         <div class="list">
-            <label class="item item-input item-select">
-                <div class="input-label custom">
-                    Client
+            <div class="item positive">
+                Client
+                <span class="item-note">
+                  {{selected.client.Name}}
+                </span>
+            </div>
+            <div class="item positive">
+                Project
+                <span class="item-note">
+                  {{selected.project.Name}}
+                </span>
+            </div>
+            <div class="item positive">
+                Task
+                <span class="item-note">
+                  {{selected.task.Name}}
+                </span>
+            </div>
+            <div class="item positive">
+                Total Hours
+                <span class="item-note">
+                  {{selected.totalHours}}
+                </span>
+            </div>
+            <ionic-durationpicker idp-config="durationConfig" idp-label="Duration" idp-output="selected.duration">
+            </ionic-durationpicker>
+            <div class="item positive">
+                <button ng-if="timerState == 'stopped'" ng-click="startTimer()" class="button button-small button-balanced button-outline" style="margin: 0px 0px 0px 5px;">Start</button>
+                <button ng-if="timerState == 'running' || timerState == 'paused'" ng-click="stopTimer()" class="button button-small button-assertive button-outline" style="margin: 0px 0px 0px 5px;">Stop</button>
+                <button ng-if="timerState == 'running'" ng-click="pauseTimer()" class="button button-small button-energized button-outline">Pause</button>
+                <button ng-if="timerState == 'paused'" ng-click="resumeTimer()" class="button button-small button-energized button-outline">Resume</button>
+                <span class="item-note">
+                    <timer autostart="false" interval="1000">{{hhours}}:{{mminutes}}:{{sseconds}}</timer>
+                </span>
+            </div>
+        </div>
+        <div class="card">
+            <div class="item item-divider">
+                Logged in time
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <b>Start</b>
                 </div>
-                <select ng-model="selected.client" ng-options="client.Name for client in clients">
-                    <option value="">--choose--</option>
-                </select>
-            </label>
-            <label class="item item-input item-select">
-                <div class="input-label custom">
-                    Project
+                <div class="col text-center">
+                    <b>Stop</b>
                 </div>
-                <select ng-model="selected.project" ng-options="project.Name for project in projects">
-                    <option value="">--choose--</option>
-                </select>
-            </label>
+                <div class="col text-center">
+                    <b>Duration</b>
+                </div>
+                <div class="col text-center">
+                    <b>Action</b>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">01:20</div>
+                <div class="col text-center">02:20</div>
+                <div class="col text-center">1hr</div>
+                <div class="col text-center">
+                    <i class="icon ion-trash-b assertive" ng-click="deleteTime()"></i>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">01:20</div>
+                <div class="col text-center">02:20</div>
+                <div class="col text-center">1hr</div>
+                <div class="col text-center">
+                    <i class="icon ion-trash-b assertive" ng-click="deleteTime()"></i>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">01:20</div>
+                <div class="col text-center">02:20</div>
+                <div class="col text-center">1hr</div>
+                <div class="col text-center">
+                    <i class="icon ion-trash-b assertive" ng-click="deleteTime()"></i>
+                </div>
+            </div>
         </div>
         <div class="padding">
             <button class="button button-block button-positive" ng-click="saveTimeSheet()">Save</button>

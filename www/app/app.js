@@ -5,7 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('officeTimerApp', ['ionic',
     'ionic-toast',
-    'ui.rCalendar'
+    'ui.rCalendar',
+    'ionic-durationpicker',
+    'timer'
 ])
 
 .run(function($ionicPlatform, $rootScope, $ionicLoading, ionicToast) {

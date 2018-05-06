@@ -3,6 +3,7 @@
 angular.module('officeTimerApp').controller('LoginController', function($scope, $state, LoginFactory, ionicToast) {
 
     $scope.loginData = {
+        URL: "",
         Username: "",
         Password: ""
     };
