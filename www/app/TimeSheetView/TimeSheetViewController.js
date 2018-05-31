@@ -3,6 +3,7 @@
 angular.module('officeTimerApp').controller('TimeSheetViewController', function($scope, $state, ionicToast, TimeSheetViewFactory) {
 
     $scope.calendar = {};
+    $scope.monthviewDisplayEventTemplateUrl = 'app/TimeSheetView/EventDetailTemplate.html';
     $scope.changeMode = function(mode) {
         $scope.calendar.mode = mode;
     };
@@ -42,4 +43,23 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
         $state.go('timeSheetEntry');
     };
 
+    $scope.calendar.eventSource = [{
+            title: '01-01',
+            startTime: moment(),
+            endTime: moment(),
+            allDay: false
+        },
+        {
+            title: '02-02',
+            startTime: moment().add(1, 'days'),
+            endTime: moment().add(1, 'days'),
+            allDay: false
+        },
+        {
+            title: '03-03',
+            startTime: moment().add(2, 'days'),
+            endTime: moment().add(2, 'days'),
+            allDay: false
+        }
+    ];
 });

@@ -4,7 +4,7 @@
 }
 
 .time-sheet-view .has-header {
-    top: 47.4%;
+    top: 350px;
 }
 
 .ionic_timepicker_popup .heading,
@@ -19,4 +19,8 @@ ion-item.item {
 
 .pull-right {
     float: right;
+}
+
+.cell {
+    height: 37px;
 }

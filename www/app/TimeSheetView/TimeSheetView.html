@@ -8,7 +8,8 @@
 
 
     <div class="calendar-area">
-        <calendar show-event-detail="false" title-changed="onViewTitleChanged(title)" time-selected="onTimeSelected(selectedTime, events, disabled)" ng-model="calendar.currentDate" calendar-mode="calendar.mode" event-selected="onEventSelected(event)" step="15"></calendar>
+        <calendar event-source="calendar.eventSource" monthview-display-event-template-url="monthviewDisplayEventTemplateUrl" show-event-detail="false" title-changed="onViewTitleChanged(title)" time-selected="onTimeSelected(selectedTime, events, disabled)" ng-model="calendar.currentDate"
+            calendar-mode="calendar.mode" event-selected="onEventSelected(event)" step="15"></calendar>
     </div>
 
     <ion-content class="main-content has-footer">
@@ -26,8 +27,8 @@
         </div>
     </ion-content>
     <div class="bar bar-footer bar-positive">
-        <button class="button button-positive" ng-click="changeMode('month')">Month</button>
-        <button class="button button-positive" ng-click="changeMode('week')">Week</button>
+        <!-- <button class="button button-positive" ng-click="changeMode('month')">Month</button>
+        <button class="button button-positive" ng-click="changeMode('week')">Week</button> -->
         <button class="button button-positive" ng-disabled="isToday()" ng-click="today()">Today</button>
     </div>
 </ion-view>
