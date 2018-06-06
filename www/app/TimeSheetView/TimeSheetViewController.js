@@ -8,6 +8,9 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
         $scope.calendar.mode = mode;
     };
 
+    $scope.weekNumber = parseInt(new Date().getDate() / 7) + 1;
+    $scope.currentWeek = "03-09Jun";
+
     $scope.totalHours = 40;
 
     $scope.onEventSelected = function(event) {
@@ -44,22 +47,31 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
     };
 
     $scope.calendar.eventSource = [{
+            title: '03-03',
+            startTime: moment().subtract(1, 'days'),
+            endTime: moment().subtract(1, 'days'),
+            allDay: false,
+            logged: false
+        }, {
             title: '01-01',
             startTime: moment(),
             endTime: moment(),
-            allDay: false
+            allDay: false,
+            logged: true
         },
         {
             title: '02-02',
             startTime: moment().add(1, 'days'),
             endTime: moment().add(1, 'days'),
-            allDay: false
+            allDay: false,
+            logged: true
         },
         {
             title: '03-03',
             startTime: moment().add(2, 'days'),
             endTime: moment().add(2, 'days'),
-            allDay: false
+            allDay: false,
+            logged: false
         }
     ];
 });

@@ -1,10 +1,10 @@
 .calendar-area {
     height: 40.5%;
-    margin-top: 44px;
+    margin-top: 89px;
 }
 
 .time-sheet-view .has-header {
-    top: 350px;
+    top: 395px;
 }
 
 .ionic_timepicker_popup .heading,
@@ -23,4 +23,9 @@ ion-item.item {
 
 .cell {
     height: 37px;
+}
+
+.monthview-logged-background {
+    background-color: #CDDC39;
+    color: white;
 }

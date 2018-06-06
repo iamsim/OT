@@ -1,15 +1,18 @@
 <ion-view name="time-sheet-view" class="time-sheet-view">
     <ion-header-bar class="bar-positive">
-        <h2 class="title">{{viewTitle}}&nbsp;({{totalHours}} hrs) Submitted</h2>
+        <h2 class="title">{{viewTitle}}</h2>
         <div class="buttons secondary">
             <button class="button button-icon ion-plus-round" ng-click="enterTimeSheet()"></button>
         </div>
     </ion-header-bar>
 
+    <div class="bar bar-subheader bar-default">
+        <h2 class="title">{{currentWeek}} - week {{weekNumber}} - Submitted</h2>
+    </div>
 
     <div class="calendar-area">
-        <calendar event-source="calendar.eventSource" monthview-display-event-template-url="monthviewDisplayEventTemplateUrl" show-event-detail="false" title-changed="onViewTitleChanged(title)" time-selected="onTimeSelected(selectedTime, events, disabled)" ng-model="calendar.currentDate"
-            calendar-mode="calendar.mode" event-selected="onEventSelected(event)" step="15"></calendar>
+        <calendar format-month-title="MMMM" event-source="calendar.eventSource" monthview-display-event-template-url="monthviewDisplayEventTemplateUrl" show-event-detail="false" title-changed="onViewTitleChanged(title)" time-selected="onTimeSelected(selectedTime, events, disabled)"
+            ng-model="calendar.currentDate" calendar-mode="calendar.mode" event-selected="onEventSelected(event)" step="15"></calendar>
     </div>
 
     <ion-content class="main-content has-footer">
