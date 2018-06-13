@@ -1,32 +1,38 @@
-<ion-view title="Login" name="login-view">
-    <ion-nav-bar class="bar-positive"></ion-nav-bar>
+<ion-view title="Login" class="login-view">
+    <ion-nav-bar class="bar-custom"></ion-nav-bar>
     <ion-content class="has-header">
-        <div class="row">
-            <div class="col text-center">
-                <img style="width: 50%;" src="app/images/ot-logo.png" />
+        <div class="outer">
+            <div class="middle">
+                <div class="inner">
+                    <div class="row">
+                        <div class="col text-center">
+                            <img style="width: 50%;" src="app/images/ot-logo.png" />
+                        </div>
+                    </div>
+                    <div class="list login-list">
+                        <label class="item item-input item-floating-label">
+                            <span class="input-label custom">URL</span>
+                            <input type="text" placeholder="URL" ng-model="daloginDatata.URL">
+                        </label>
+                        <label class="item item-input item-floating-label">
+                            <span class="input-label custom">Username</span>
+                            <input type="text" placeholder="Username" ng-model="loginData.Username">
+                        </label>
+                        <label class="item item-input item-floating-label">
+                            <span class="input-label custom">Password</span>
+                            <input type="password" placeholder="Password" ng-model="loginData.Password">
+                        </label>
+                    </div>
+                    <div class="row" ng-if="errorMessage">
+                        <div class="col assertive text-center">
+                            {{errorMessage}}
+                        </div>
+                    </div>
+                    <div class="padding">
+                        <button class="button button-block button-custom" ng-click="login()">Login</button>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="list login-list">
-            <label class="item item-input item-floating-label">
-			<span class="input-label positive">URL</span>
-				<input type="text" placeholder="URL" ng-model="daloginDatata.URL">
-			</label>
-            <label class="item item-input item-floating-label">
-			<span class="input-label positive">Username</span>
-				<input type="text" placeholder="Username" ng-model="loginData.Username">
-			</label>
-            <label class="item item-input item-floating-label">
-			<span class="input-label positive">Password</span>
-				<input type="password" placeholder="Password" ng-model="loginData.Password">
-			</label>
-        </div>
-        <div class="row" ng-if="errorMessage">
-            <div class="col assertive text-center">
-                {{errorMessage}}
-            </div>
-        </div>
-        <div class="padding">
-            <button class="button button-block button-positive" ng-click="login()">Login</button>
         </div>
     </ion-content>
 </ion-view>

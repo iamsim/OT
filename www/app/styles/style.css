@@ -29,3 +29,84 @@ ion-item.item {
     background-color: #CDDC39;
     color: white;
 }
+
+.time-entry-view,
+.login-view {
+    background: #e1e0e5;
+}
+
+.button-text-custom {
+    color: #1c94c9 !important;
+    margin-left: 5px;
+    padding: 0px 16px !important;
+}
+
+.time-entry-view .card {
+    margin: 15px;
+}
+
+.total-hours {
+    display: inline-block;
+    line-height: 48px;
+    color: #387ef5 !important;
+    background: #fff;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%;
+}
+
+.popup {
+    border-radius: 5px !important;
+}
+
+.popup-head {
+    display: none;
+}
+
+.popup-body {
+    background: #e5e5e5;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    text-align: center;
+    font-size: 35px;
+}
+
+.popup-body {
+    padding: 60px;
+}
+
+.outer {
+    display: table;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+.middle {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.inner {
+    margin-left: auto;
+    margin-right: auto;
+    background: #fff;
+    margin: 0 10px;
+    border-radius: 4px;
+}
+
+.popup-buttons {
+    padding: 30px;
+}
+
+.popup-buttons .button {
+    border-radius: 25px;
+}
+
+.manual-time-entry {
+    margin: 10px 16px !important;
+    width: auto !important;
+    padding-top: 5px !important;
+    border-radius: 5px !important;
+    background: #fff;
+}
