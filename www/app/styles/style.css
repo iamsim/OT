@@ -55,10 +55,6 @@ ion-item.item {
     width: 100%;
 }
 
-.popup {
-    border-radius: 5px !important;
-}
-
 .popup-head {
     display: none;
 }
