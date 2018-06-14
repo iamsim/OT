@@ -1,28 +1,29 @@
 'use strict';
 
-angular.module('officeTimerApp').controller('TimeSheetEntryController', function($scope, $state, $ionicPopup, $timeout) {
+angular.module('officeTimerApp').controller('TimeSheetEntryController', function($scope, $state, $ionicPopup, $timeout, ionicTimePicker, ionicToast) {
 
     $scope.selected = {
         client: null,
         project: null,
         task: null,
-        totalHours: 3,
-        duration: 0
+        totalHours: 0
     };
 
-    $scope.loggedInTimes = [{
-        Start: "01:20",
-        Stop: "02:20",
-        Duration: "1hr"
-    }, {
-        Start: "01:20",
-        Stop: "02:20",
-        Duration: "1hr"
-    }, {
-        Start: "01:20",
-        Stop: "02:20",
-        Duration: "1hr"
-    }];
+    $scope.currentRunningTime = {
+        Start: null,
+        Stop: null,
+        Duration: null
+    };
+
+    $scope.timepicked = {
+        StartHours: 0,
+        StartMinutes: 0,
+        StopHours: 0,
+        StopMinutes: 0,
+        Duration: "0:0"
+    };
+
+    $scope.loggedInTimes = [];
 
     $scope.pauseButton = {
         text: 'Pause',
@@ -61,19 +62,50 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         Name: "TMS-101 [refresh media]"
     }];
 
-    $scope.durationConfig = {
-        inputButtonType: 'button-custom button-outline',
-        popupTitle: 'Task Duration',
-        popupSubTitle: 'How long does it take you to finish this task?',
-        popupSaveLabel: 'Set',
-        popupSaveButtonType: 'button-outline button-custom',
-        popupCancelLabel: 'Close',
-        popupCancelButtonType: 'button-outline button-custom',
-        minutesStep: 15,
-        format: 'HH:MM:SS'
+    $scope.timerState = 'stopped';
+
+    var ipObj1 = {
+        callback: function(val) { //Mandatory
+            if (typeof(val) === 'undefined') {
+                console.log('Time not selected');
+            } else {
+                var selectedTime = new Date(val * 1000);
+                $scope.timepicked.StartHours = selectedTime.getUTCHours();
+                $scope.timepicked.StartMinutes = selectedTime.getUTCMinutes();
+            }
+        },
+        format: 24, //Optional
+        step: 1,
+        setLabel: 'Set' //Optional
     };
 
-    $scope.timerState = 'stopped';
+    var ipObj2 = {
+        callback: function(val) { //Mandatory
+            if (typeof(val) === 'undefined') {
+                console.log('Time not selected');
+            } else {
+                var selectedTime = new Date(val * 1000);
+                $scope.timepicked.StopHours = selectedTime.getUTCHours();
+                $scope.timepicked.StopMinutes = selectedTime.getUTCMinutes();
+                $scope.timepicked.Duration = ($scope.timepicked.StopHours - $scope.timepicked.StartHours) + ":" + ($scope.timepicked.StopMinutes - $scope.timepicked.StartMinutes);
+            }
+        },
+        format: 24, //Optional
+        step: 1,
+        setLabel: 'Set' //Optional
+    };
+
+    $scope.pickStartTime = function() {
+        ionicTimePicker.openTimePicker(ipObj1);
+    };
+
+    $scope.pickEndTime = function() {
+        if ($scope.timepicked.StartHours == 0) {
+            ionicToast.show("Please select start time first", 'bottom', false, 2500);
+        } else {
+            ionicTimePicker.openTimePicker(ipObj2);
+        }
+    };
 
     $scope.startTimer = function() {
         var myPopup = $ionicPopup.show({
@@ -89,37 +121,55 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         });
 
         $timeout(function() {
-            $scope.$broadcast('timer-start');
             $scope.timerState = 'running';
+            $scope.$broadcast('timer-start');
+            $scope.currentRunningTime.Start = moment().format("hh:mm:ss");
         }, 100);
     };
 
     $scope.pauseTimer = function() {
-        $scope.$broadcast('timer-stop');
         $scope.timerState = 'paused';
+        $scope.$broadcast('timer-stop');
         $scope.buttonArray.splice(0, 1);
         $scope.buttonArray.splice(0, 0, $scope.resumeButton);
     };
 
     $scope.resumeTimer = function() {
-        $scope.$broadcast('timer-resume');
         $scope.timerState = 'running';
+        $scope.$broadcast('timer-resume');
         $scope.buttonArray.splice(0, 1);
         $scope.buttonArray.splice(0, 0, $scope.pauseButton);
     };
 
     $scope.stopTimer = function() {
-        $scope.$broadcast('timer-stop');
         $scope.timerState = 'stopped';
-        console.log($scope.hours, $scope.minutes, $scope.seconds);
+        $scope.$broadcast('timer-stop');
+        $scope.buttonArray.splice(0, 1);
+        $scope.buttonArray.splice(0, 0, $scope.pauseButton);
     };
 
     $scope.$on('timer-stopped', function(event, data) {
-        $scope.selected.totalHours = parseFloat(data.hours + (data.minutes / 60) + (data.seconds / 3600));
+        if ($scope.timerState == 'stopped') {
+            $scope.currentRunningTime.Stop = moment().format("hh:mm:ss");
+            $scope.currentRunningTime.Duration = data.hours + ":" + data.minutes + ":" + data.seconds;
+            console.log($scope.currentRunningTime);
+            $scope.loggedInTimes.push($scope.currentRunningTime);
+            $scope.currentRunningTime = {
+                Start: null,
+                Stop: null,
+                Duration: null
+            };
+        }
     });
 
     $scope.saveTimeSheet = function() {
         $state.go('timeSheetView');
+    };
+
+    $scope.addLoggedTime = function() {
+        if ($scope.timepicked.Start != null && $scope.timepicked.Stop != null) {
+            $scope.loggedInTimes.push($scope.timepicked);
+        }
     };
 
     $scope.deleteTime = function(index) {

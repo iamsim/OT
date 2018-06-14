@@ -36,7 +36,7 @@
                 <button ng-click="startTimer()" class="button button-stable button-text-custom icon-left ion-android-stopwatch">START TIMER</button>
             </div>
             <div class="col no-padding text-center" style="padding:0px 10px 0px 0px;">
-                <div class="total-hours">
+                <div class="total-hours custom">
                     TOTAL HOURS : {{selected.totalHours | number: 2}}
                 </div>
             </div>
@@ -44,30 +44,30 @@
         <div class="row manual-time-entry" style="margin: 10px 0px;">
             <div class="col col-80" style="padding: 0">
                 <div class="row" style="padding: 0">
-                    <div class="col text-center">
+                    <div class="col text-center" style="padding: 0">
                         <b class="custom">Start</b>
                     </div>
-                    <div class="col text-center">
+                    <div class="col text-center" style="padding: 0">
                         <b class="custom">Stop</b>
                     </div>
-                    <div class="col text-center">
+                    <div class="col text-center" style="padding: 0">
                         <b class="custom">Duration</b>
                     </div>
                 </div>
-                <div class="row" style="padding: 0">
-                    <div class="col text-center">
-                        1:20
+                <div class="row" style="padding: 0; margin: 0;">
+                    <div class="col text-center" style="padding-bottom: 0;" ng-click="pickStartTime()">
+                        <div style="border-bottom: 1px dashed;width: 70%;margin: auto;">{{timepicked.StartHours}}:{{timepicked.StartMinutes}}</div>
                     </div>
-                    <div class="col text-center">
-                        2:20
+                    <div class="col text-center" style="padding-bottom: 0;" ng-click="pickEndTime()">
+                        <div style="border-bottom: 1px dashed;width: 70%;margin: auto;">{{timepicked.StopHours}}:{{timepicked.StopMinutes}}</div>
                     </div>
-                    <div class="col text-center">
-                        1hr
+                    <div class="col text-center" style="padding-bottom: 0;">
+                        {{timepicked.Duration}}
                     </div>
                 </div>
             </div>
             <div class="col text-center">
-                <button class="button button-small button-custom button-outline" style="margin-top: 9px;border-radius: 15px;width: 50px;">ADD</button>
+                <button ng-click="addLoggedTime()" class="button button-small button-custom button-outline" style="margin-top: 5px;border-radius: 15px;width: 50px;">ADD</button>
             </div>
         </div>
         <div class="card" ng-if="loggedInTimes.length > 0">
