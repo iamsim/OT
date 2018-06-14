@@ -1,10 +1,10 @@
 .calendar-area {
-    height: 40.5%;
-    margin-top: 89px;
+    height: 312px;
+    margin-top: 88px;
 }
 
 .time-sheet-view .has-header {
-    top: 395px;
+    top: 403px;
 }
 
 .ionic_timepicker_popup .heading,
@@ -95,4 +95,12 @@ ion-item.item {
     padding-top: 5px !important;
     border-radius: 5px !important;
     background: #fff;
+}
+
+.table>tbody>tr>td {
+    padding: 4px !important;
+}
+
+.monthview-slide {
+    height: auto;
 }

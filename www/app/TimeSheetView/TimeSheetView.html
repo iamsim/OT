@@ -14,7 +14,7 @@
         <calendar format-month-title="MMMM" event-source="calendar.eventSource" monthview-display-event-template-url="monthviewDisplayEventTemplateUrl" show-event-detail="false" title-changed="onViewTitleChanged(title)" time-selected="onTimeSelected(selectedTime, events, disabled)"
             ng-model="calendar.currentDate" calendar-mode="calendar.mode" event-selected="onEventSelected(event)" step="15"></calendar>
     </div>
-    <ion-content class="main-content has-footer">
+    <ion-content class="main-content">
         <div class="list-area">
             <div class="list">
                 <div class="item">
@@ -37,8 +37,10 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col">
+                <button style="border-radius:0px;width: 100%;font-size: 16px;" class="button button-custom">Submit</button>
+            </div>
+        </div>
     </ion-content>
-    <ion-footer-bar class="bar-custom button-footer-bar custom-footer" style="padding:0;border:none;">
-        <button style="border-radius:0px;width: 100%;font-size: 16px;" class="button button-custom">Submit</button>
-    </ion-footer-bar>
 </ion-view>
