@@ -16,10 +16,8 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
     };
 
     $scope.timepicked = {
-        StartHours: 0,
-        StartMinutes: 0,
-        StopHours: 0,
-        StopMinutes: 0,
+        Start: new Date(),
+        Stop: new Date(),
         Duration: "0:0"
     };
 
@@ -70,11 +68,11 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
                 console.log('Time not selected');
             } else {
                 var selectedTime = new Date(val * 1000);
-                $scope.timepicked.StartHours = selectedTime.getUTCHours();
-                $scope.timepicked.StartMinutes = selectedTime.getUTCMinutes();
+                $scope.timepicked.Start.setHours(selectedTime.getUTCHours());
+                $scope.timepicked.Start.setMinutes(selectedTime.getUTCMinutes());
             }
         },
-        format: 24, //Optional
+        format: 12, //Optional
         step: 1,
         setLabel: 'Set' //Optional
     };
@@ -85,12 +83,15 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
                 console.log('Time not selected');
             } else {
                 var selectedTime = new Date(val * 1000);
-                $scope.timepicked.StopHours = selectedTime.getUTCHours();
-                $scope.timepicked.StopMinutes = selectedTime.getUTCMinutes();
-                $scope.timepicked.Duration = ($scope.timepicked.StopHours - $scope.timepicked.StartHours) + ":" + ($scope.timepicked.StopMinutes - $scope.timepicked.StartMinutes);
+                $scope.timepicked.Stop.setHours(selectedTime.getUTCHours());
+                $scope.timepicked.Stop.setMinutes(selectedTime.getUTCMinutes());
+                var start = moment($scope.timepicked.Start);
+                var end = moment($scope.timepicked.Stop);
+                var duration = moment.duration(end.diff(start));
+                $scope.timepicked.Duration = parseInt(duration.asHours()) + ":" + (parseInt(duration.asMinutes()) % 60);
             }
         },
-        format: 24, //Optional
+        format: 12, //Optional
         step: 1,
         setLabel: 'Set' //Optional
     };
@@ -123,7 +124,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         $timeout(function() {
             $scope.timerState = 'running';
             $scope.$broadcast('timer-start');
-            $scope.currentRunningTime.Start = moment().format("hh:mm:ss");
+            $scope.currentRunningTime.Start = moment().format("hh:mm");
         }, 100);
     };
 
@@ -150,10 +151,11 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
 
     $scope.$on('timer-stopped', function(event, data) {
         if ($scope.timerState == 'stopped') {
-            $scope.currentRunningTime.Stop = moment().format("hh:mm:ss");
-            $scope.currentRunningTime.Duration = data.hours + ":" + data.minutes + ":" + data.seconds;
+            $scope.currentRunningTime.Stop = moment().format("hh:mm");
+            $scope.currentRunningTime.Duration = data.hours + ":" + data.minutes;
             console.log($scope.currentRunningTime);
             $scope.loggedInTimes.push($scope.currentRunningTime);
+            $scope.calculateTotalHours($scope.currentRunningTime, 'add');
             $scope.currentRunningTime = {
                 Start: null,
                 Stop: null,
@@ -167,12 +169,32 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
     };
 
     $scope.addLoggedTime = function() {
-        if ($scope.timepicked.Start != null && $scope.timepicked.Stop != null) {
-            $scope.loggedInTimes.push($scope.timepicked);
+        if ($scope.timepicked.Duration != "0:0") {
+            var obj = angular.copy($scope.timepicked);
+            $scope.loggedInTimes.push(obj);
+            $scope.calculateTotalHours(obj, 'add');
+            $scope.timepicked = {
+                Start: new Date(),
+                Stop: new Date(),
+                Duration: "0:0"
+            };
+        } else {
+            ionicToast.show("Please choose different times", 'bottom', false, 2500);
         }
     };
 
     $scope.deleteTime = function(index) {
+        $scope.calculateTotalHours($scope.loggedInTimes[index], 'sub');
         $scope.loggedInTimes.splice(index, 1);
+    };
+
+    $scope.calculateTotalHours = function(obj, operation) {
+        var hours = obj.Duration.slice(0, obj.Duration.indexOf(":"));
+        var minutes = obj.Duration.split(":").pop();
+        if (operation == 'add') {
+            $scope.selected.totalHours = $scope.selected.totalHours + (parseInt(hours)) + (parseInt(minutes) / 60);
+        } else {
+            $scope.selected.totalHours = $scope.selected.totalHours - (parseInt(hours)) - (parseInt(minutes) / 60);
+        }
     };
 });
