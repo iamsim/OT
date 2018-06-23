@@ -4,7 +4,7 @@
 }
 
 .time-sheet-view .has-header {
-    top: 403px;
+    top: 400px;
 }
 
 .ionic_timepicker_popup .heading,
@@ -28,6 +28,14 @@ ion-item.item {
 .monthview-logged-background {
     background-color: #CDDC39;
     color: white;
+}
+
+.monthview-current {
+    background-color: lightgrey !important;
+}
+
+.monthview-selected {
+    background-color: #00BCD4 !important;
 }
 
 .time-entry-view,
@@ -103,4 +111,9 @@ ion-item.item {
 
 .monthview-slide {
     height: auto;
+}
+
+.subheader-text {
+    width: 100%;
+    line-height: 34px;
 }

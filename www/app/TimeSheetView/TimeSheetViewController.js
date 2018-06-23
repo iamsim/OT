@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('officeTimerApp').controller('TimeSheetViewController', function($scope, $state, ionicToast, TimeSheetViewFactory) {
+angular.module('officeTimerApp').controller('TimeSheetViewController', function($scope, $state, ionicToast, TimeSheetViewFactory, LoginFactory) {
 
     $scope.calendar = {};
     $scope.monthviewDisplayEventTemplateUrl = 'app/TimeSheetView/EventDetailTemplate.html';
@@ -9,9 +9,9 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
     };
 
     $scope.weekNumber = parseInt(new Date().getDate() / 7) + 1;
-    $scope.currentWeek = "03-09Jun";
+    $scope.currentWeek = null;
 
-    $scope.totalHours = 40;
+    $scope.totalHours = null;
 
     $scope.onEventSelected = function(event) {
         console.log('Event selected:' + event.startTime + '-' + event.endTime + ',' + event.title);
@@ -35,7 +35,8 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
     };
 
     $scope.onTimeSelected = function(selectedTime, events, disabled) {
-        console.log('Selected time: ' + selectedTime + ', hasEvents: ' + (events !== undefined && events.length !== 0) + ', disabled: ' + disabled);
+        $scope.getTimeSheetPeriod(moment(selectedTime).format("YYYY"), moment(selectedTime).format("MM"), moment(selectedTime).format("DD"));
+        $scope.getTimeEntries(selectedTime);
     };
 
     $scope.$watch('calendar.currentDate', function(nv, ov) {
@@ -46,32 +47,78 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
         $state.go('timeSheetEntry');
     };
 
-    $scope.calendar.eventSource = [{
-            title: '03-03',
-            startTime: moment().subtract(1, 'days'),
-            endTime: moment().subtract(1, 'days'),
-            allDay: false,
-            logged: false
-        }, {
-            title: '01-01',
-            startTime: moment(),
-            endTime: moment(),
-            allDay: false,
-            logged: true
-        },
-        {
-            title: '02-02',
-            startTime: moment().add(1, 'days'),
-            endTime: moment().add(1, 'days'),
-            allDay: false,
-            logged: true
-        },
-        {
-            title: '03-03',
-            startTime: moment().add(2, 'days'),
-            endTime: moment().add(2, 'days'),
-            allDay: false,
-            logged: false
+    $scope.calendar.eventSource = [];
+
+    $scope.getTimeSheetPeriod = function(year, month, day) {
+        var obj = {
+            YearWS: year,
+            MonthWS: month,
+            DayWS: day
+        };
+        TimeSheetViewFactory.getTimeSheetPeriod(obj)
+            .then(function(success) {
+                if (success.status == 500) {
+                    $scope.errorMessage = success.data;
+                } else {
+                    $scope.errorMessage = null;
+                    $scope.timesheetPeriod = success.data.results[0];
+                    $scope.currentWeek = moment($scope.timesheetPeriod.StartDate).format("DD MMM") + ' - ' + moment($scope.timesheetPeriod.EndDate).format("DD MMM, YYYY")
+                    $scope.getTimesheetWorkingDaysWithHours(obj);
+                }
+            }, function(error) {
+                ionicToast.show(error, 'bottom', 2500, false);
+            });
+    };
+
+    $scope.getTimesheetWorkingDaysWithHours = function(obj) {
+        TimeSheetViewFactory.getTimesheetWorkingDaysWithHours(obj)
+            .then(function(success) {
+                if (success.status == 500) {
+                    $scope.errorMessage = success.data;
+                } else {
+                    $scope.errorMessage = null;
+                    $scope.timesheetWorkingDaysWithHours = success.data.results;
+                    $scope.markTimeSheetOnCalendar();
+                }
+            }, function(error) {
+                ionicToast.show(error, 'bottom', 2500, false);
+            });
+    };
+
+    $scope.markTimeSheetOnCalendar = function() {
+        var events = [];
+        var daysWithHours = angular.copy($scope.timesheetWorkingDaysWithHours);
+        for (var i = 0; i < daysWithHours.length; i++) {
+            events.push({
+                title: daysWithHours[i].TotalHours,
+                startTime: moment(new Date(daysWithHours[i].TimeEntryDate)).add(1, 'days'),
+                endTime: moment(new Date(daysWithHours[i].TimeEntryDate)).add(1, 'days'),
+                allDay: true,
+                logged: false
+            });
         }
-    ];
+        $scope.calendar.eventSource = events;
+    };
+
+    $scope.getTimeEntries = function(selectedTime) {
+        var obj = {
+            StartDate: moment(selectedTime).format("YYYY-MM-DD"),
+            EndDate: moment(selectedTime).format("YYYY-MM-DD")
+        }
+        TimeSheetViewFactory.getTimeEntries(obj)
+            .then(function(success) {
+                if (success.status == 500) {
+                    $scope.errorMessage = success.data;
+                } else {
+                    $scope.errorMessage = null;
+                    $scope.timeEntries = success.data.results;
+                    $scope.totalHours = 40;
+                }
+            }, function(error) {
+                ionicToast.show(error, 'bottom', 2500, false);
+            });
+    };
+
+    $scope.getTimeSheetPeriod(moment().format("YYYY"), moment().format("MM"), moment().format("DD"));
+    $scope.getTimeEntries($scope.calendar.currentDate);
 });

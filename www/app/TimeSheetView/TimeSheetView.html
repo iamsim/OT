@@ -7,7 +7,7 @@
     </ion-header-bar>
 
     <div class="bar bar-subheader bar-default">
-        <h2 class="title">{{currentWeek}} - week {{weekNumber}} - Submitted</h2>
+        <div class="subheader-text text-center">{{currentWeek}} <span style="color:#1c94c9;">({{timesheetPeriod.TimesheetStatus}})</span></div>
     </div>
 
     <div class="calendar-area">
@@ -16,31 +16,29 @@
     </div>
     <ion-content class="main-content">
         <div class="list-area">
-            <div class="list">
-                <div class="item">
-                    <div style="overflow: hidden; text-overflow: ellipsis;width: 80%;float:left;">
-                        <h2>ABC Software</h2>
-                        <p>Time Management System | TMS-101 [Refresh Media] | 12hr</p>
-                    </div>
-                    <span class="item-note" style="line-height: 41px;">
-                        4hr
-                    </span>
+            <div class="list" ng-if="timeEntries.length > 0">
+                <div class="item-divider" style="padding:8px;">
+                    Time Entry Details
+                    <span style="float: right;" ng-if="totalHours != null">Total Hours: {{totalHours}}</span>
                 </div>
-                <div class="item">
+                <div class="item" ng-repeat="te in timeEntries">
                     <div style="overflow: hidden; text-overflow: ellipsis;width: 80%;float:left;">
-                        <h2>ABC Software</h2>
-                        <p>Time Management System | TMS-101 [Refresh Media] | 12hr</p>
+                        <h2>{{te.ProjectName}}</h2>
+                        <p>{{te.ClientName}} | {{te.TaskName}}</p>
                     </div>
                     <span class="item-note" style="line-height: 41px;">
-                        4hr
+                        {{te.TotalTime | date: 'hh:mm'}}
                     </span>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <button style="border-radius:0px;width: 100%;font-size: 16px;" class="button button-custom">Submit</button>
+            <div class="row" ng-if="timeEntries.length == 0">
+                <div class="col text-center">
+                    Add new entry on top right corner!
+                </div>
             </div>
         </div>
     </ion-content>
+    <ion-footer-bar class="bar-custom button-footer-bar custom-footer" style="padding:0;border:none;" ng-if="timesheetPeriod.DisableTimeEntry == 'false'">
+        <button style="border-radius:0px; width:100%;" class="button button-custom loginButton" ng-click="submit()">Submit</button>
+    </ion-footer-bar>
 </ion-view>
