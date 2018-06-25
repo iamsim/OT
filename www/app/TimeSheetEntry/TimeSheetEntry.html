@@ -5,39 +5,66 @@
     <ion-content class="has-header">
         <div class="card">
             <div class="list">
+                <label class="item item-input item-select" ng-if="timesheetPreferences.ShowClientInTimesheet == 'true'">
+                    <div class="input-label custom">
+                        Client
+                    </div>
+                    <select ng-model="selected.client" ng-options="client.ClientName for client in clients" ng-change="getAssignedProjectsByClients(selected.client)">
+                        <option value="">--choose--</option>
+                    </select>
+                </label>
                 <label class="item item-input item-select">
-                <div class="input-label custom">
-                    CLIENT
-                </div>
-                <select ng-model="selected.client" ng-options="client.Name for client in clients" ng-change="clientSelected(selected.client)">
-                    <option value="">--choose--</option>
-                </select>
-            </label>
+                    <div class="input-label custom">
+                        Project
+                    </div>
+                    <select ng-model="selected.project" ng-options="project.ProjectName for project in projects" ng-change="getAssignedTasks(selected.project)">
+                        <option value="">--choose--</option>
+                    </select>
+                </label>
                 <label class="item item-input item-select">
-                <div class="input-label custom">
-                    PROJECT
+                    <div class="input-label custom">
+                        Task
+                    </div>
+                    <select ng-model="selected.task" ng-options="task.TaskName for task in tasks" ng-change="taskSelected(selected.task)">
+                        <option value="">--choose--</option>
+                    </select>
+                </label>
+                <label class="item item-input item-select" ng-if="timesheetPreferences.ShowWorkTypeInTimeSheet == 'true'">
+                    <div class="input-label custom">
+                        Work Type
+                    </div>
+                    <select ng-model="selected.workType" ng-options="workType.AccountWorkType for workType in workTypes">
+                        <option value="">--choose--</option>
+                    </select>
+                </label>
+                <label class="item item-input item-select" ng-if="timesheetPreferences.ShowCostCenterInTimeSheet == 'true'">
+                    <div class="input-label custom">
+                        Cost Center
+                    </div>
+                    <select ng-model="selected.costCenter" ng-options="costCenter.CostCenterName for costCenter in costCenters">
+                        <option value="">--choose--</option>
+                    </select>
+                </label>
+                <div class="item item-toggle" style="padding-bottom: 5px;" ng-if="timesheetPreferences.ShowBillableInTimesheet == 'true'">
+                    <span class="custom">Is Billable?</span>
+                    <div class="col col-25 text-center">
+                        <label class="toggle toggle-custom">
+                            <input type="checkbox" ng-model="newTimesheetEntry.IsBillable">
+                            <div class="track">
+                                <div class="handle"></div>
+                            </div>
+                        </label>
+                    </div>
                 </div>
-                <select ng-model="selected.project" ng-options="project.Name for project in projects" ng-change="projectSelected(selected.project)">
-                    <option value="">--choose--</option>
-                </select>
-            </label>
-                <label class="item item-input item-select">
-                <div class="input-label custom">
-                    TASK
-                </div>
-                <select ng-model="selected.task" ng-options="task.Name for task in tasks" ng-change="taskSelected(selected.task)">
-                    <option value="">--choose--</option>
-                </select>
-            </label>
             </div>
         </div>
         <div class="row" style="padding-top:0px; padding-bottom:0px;">
             <div class="col" style="padding-top:0px; padding-bottom:0px;">
-                <button ng-click="startTimer()" class="button button-stable button-text-custom icon-left ion-android-stopwatch">START TIMER</button>
+                <button ng-click="startTimer()" class="button button-stable button-text-custom icon-left ion-android-stopwatch">Start Timer</button>
             </div>
             <div class="col no-padding text-center" style="padding:0px 10px 0px 0px;">
                 <div class="total-hours custom">
-                    TOTAL HOURS: {{selected.totalHours | number: 2}}
+                    Total Hours: {{selected.totalHours | number: 2}}
                 </div>
             </div>
         </div>
@@ -67,7 +94,7 @@
                 </div>
             </div>
             <div class="col text-center">
-                <button ng-click="addLoggedTime()" class="button button-small button-custom button-outline" style="margin-top: 5px;border-radius: 15px;width: 50px;">ADD</button>
+                <button ng-click="addLoggedTime()" class="button button-small button-custom button-outline" style="margin-top: 5px;border-radius: 15px;width: 50px;">Add</button>
             </div>
         </div>
         <div class="card" ng-if="loggedInTimes.length > 0">

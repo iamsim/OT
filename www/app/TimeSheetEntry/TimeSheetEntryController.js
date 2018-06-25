@@ -1,11 +1,19 @@
 'use strict';
 
-angular.module('officeTimerApp').controller('TimeSheetEntryController', function($scope, $state, $ionicPopup, $timeout, ionicTimePicker, ionicToast) {
+angular.module('officeTimerApp').controller('TimeSheetEntryController', function($scope, $state, $ionicPopup, $timeout, ionicTimePicker, ionicToast, TimeSheetEntryFactory) {
+
+    $scope.newTimesheetEntry = {
+        IsBillable: false
+    };
+
+    $scope.timesheetPreferences = null;
 
     $scope.selected = {
         client: null,
         project: null,
         task: null,
+        costCenter: null,
+        workType: null,
         totalHours: 0
     };
 
@@ -48,17 +56,11 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
     }
     $scope.buttonArray = [$scope.pauseButton, $scope.stopButton];
 
-    $scope.clients = [{
-        Name: "ABC Software"
-    }];
-
-    $scope.projects = [{
-        Name: "Time Management System"
-    }];
-
-    $scope.tasks = [{
-        Name: "TMS-101 [refresh media]"
-    }];
+    $scope.clients = [];
+    $scope.projects = [];
+    $scope.tasks = [];
+    $scope.workTypes = [];
+    $scope.costCenters = [];
 
     $scope.timerState = 'stopped';
 
@@ -165,7 +167,29 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
     });
 
     $scope.saveTimeSheet = function() {
-        $state.go('timeSheetView');
+        if ($scope.selected.project == null) {
+            ionicToast.show("Please select a project", 'bottom', false, 2500);
+        } else if ($scope.selected.task == null) {
+            ionicToast.show("Please select a task", 'bottom', false, 2500);
+        } else if ($scope.timesheetPreferences.ShowWorkTypeInTimeSheet == 'true' && $scope.selected.workType == null) {
+            ionicToast.show("Please select a work type", 'bottom', false, 2500);
+        } else if ($scope.timesheetPreferences.ShowCostCenterInTimeSheet == 'true' && $scope.selected.costCenter == null) {
+            ionicToast.show("Please select a cost center", 'bottom', false, 2500);
+        } else {
+            var obj = {
+                YearWS: moment(TimeSheetEntryFactory.timesheetEntryDate).format("YYYY"),
+                MonthWS: moment(TimeSheetEntryFactory.timesheetEntryDate).format("MM"),
+                DayWS: moment(TimeSheetEntryFactory.timesheetEntryDate).format("DD"),
+                AccountProjectId: $scope.selected.project.ProjectID,
+                AccountProjectTaskId: $scope.selected.task.TaskID,
+                TotalTime: "00:00",
+                Description: "",
+                WorkType: $scope.selected.workType.WorkTypeID,
+                CostCenter: $scope.selected.costCenter.CostCenterID,
+                IsBillable: $scope.selected.IsBillable
+            };
+            console.log(obj);
+        }
     };
 
     $scope.addLoggedTime = function() {
@@ -197,4 +221,115 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
             $scope.selected.totalHours = $scope.selected.totalHours - (parseInt(hours)) - (parseInt(minutes) / 60);
         }
     };
+
+    $scope.getTimesheetPreferences = function() {
+        TimeSheetEntryFactory.getTimeSheetPreferences()
+            .then(function(success) {
+                if (success.status == 500) {
+                    $scope.errorMessage = success.data;
+                } else {
+                    $scope.timesheetPreferences = success.data.results[0];
+                    if ($scope.timesheetPreferences.ShowClientInTimesheet == 'true') {
+                        $scope.getAssignedClients();
+                    } else {
+                        $scope.getAssignedProjects()
+                    }
+                    if ($scope.timesheetPreferences.ShowWorkTypeInTimeSheet == 'true') {
+                        $scope.getWorkType();
+                    }
+                    if ($scope.timesheetPreferences.ShowCostCenterInTimeSheet == 'true') {
+                        $scope.getCostCenter();
+                    }
+                }
+            }, function(error) {
+                ionicToast.show(error, 'bottom', 2500, false);
+            });
+    };
+
+    $scope.getAssignedClients = function() {
+        TimeSheetEntryFactory.getAssignedClients()
+            .then(function(success) {
+                if (success.status == 500) {
+                    $scope.errorMessage = success.data;
+                } else {
+                    $scope.clients = success.data.results;
+                    $scope.getAssignedProjectsByClients();
+                }
+            }, function(error) {
+                ionicToast.show(error, 'bottom', 2500, false);
+            });
+    };
+
+    $scope.getAssignedProjects = function() {
+        TimeSheetEntryFactory.getAssignedProjects()
+            .then(function(success) {
+                if (success.status == 500) {
+                    $scope.errorMessage = success.data;
+                } else {
+                    $scope.projects = success.data.results;
+                }
+            }, function(error) {
+                ionicToast.show(error, 'bottom', 2500, false);
+            });
+    };
+
+    $scope.getAssignedProjectsByClients = function(client) {
+        var obj = {
+            ClientId: client.Id
+        }
+        TimeSheetEntryFactory.getAssignedProjectsByClients(obj)
+            .then(function(success) {
+                if (success.status == 500) {
+                    $scope.errorMessage = success.data;
+                } else {
+                    $scope.projects = success.data.results;
+                }
+            }, function(error) {
+                ionicToast.show(error, 'bottom', 2500, false);
+            });
+    };
+
+    $scope.getAssignedTasks = function(project) {
+        var obj = {
+            AccountProjectId: project.ProjectID
+        }
+        TimeSheetEntryFactory.getAssignedTasks(obj)
+            .then(function(success) {
+                if (success.status == 500) {
+                    $scope.errorMessage = success.data;
+                } else {
+                    $scope.tasks = success.data.results;
+                }
+            }, function(error) {
+                ionicToast.show(error, 'bottom', 2500, false);
+            });
+    };
+
+    $scope.getWorkType = function() {
+        TimeSheetEntryFactory.getWorkType()
+            .then(function(success) {
+                if (success.status == 500) {
+                    $scope.errorMessage = success.data;
+                } else {
+                    $scope.workTypes = success.data.results;
+                }
+            }, function(error) {
+                ionicToast.show(error, 'bottom', 2500, false);
+            });
+    };
+
+    $scope.getCostCenter = function() {
+        TimeSheetEntryFactory.getCostCenter()
+            .then(function(success) {
+                if (success.status == 500) {
+                    $scope.errorMessage = success.data;
+                } else {
+                    $scope.costCenters = success.data.results;
+                }
+            }, function(error) {
+                ionicToast.show(error, 'bottom', 2500, false);
+            });
+    };
+
+    $scope.getTimesheetPreferences();
 });
