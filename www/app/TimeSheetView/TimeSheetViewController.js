@@ -112,7 +112,24 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
                 } else {
                     $scope.errorMessage = null;
                     $scope.timeEntries = success.data.results;
-                    $scope.totalHours = 40;
+                    if ($scope.timeEntries.length > 0) {
+                        $scope.getTotalHours(obj);
+                    }
+                }
+            }, function(error) {
+                ionicToast.show(error, 'bottom', 2500, false);
+            });
+    };
+
+    $scope.getTotalHours = function(obj) {
+        obj.AccountEmployeeId = LoginFactory.GetAccountEmployeeIdForMobileResult;
+        TimeSheetViewFactory.getTotalHours(obj)
+            .then(function(success) {
+                if (success.status == 500) {
+                    $scope.errorMessage = success.data;
+                } else {
+                    $scope.errorMessage = null;
+                    $scope.totalHours = success.data.GetTimeEntriesByEmployeeIdAndDateRangeForTotalHoursResult;
                 }
             }, function(error) {
                 ionicToast.show(error, 'bottom', 2500, false);

@@ -14,7 +14,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         task: null,
         costCenter: null,
         workType: null,
-        totalHours: 0
+        totalHours: "0:0"
     };
 
     $scope.currentRunningTime = {
@@ -213,12 +213,10 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
     };
 
     $scope.calculateTotalHours = function(obj, operation) {
-        var hours = obj.Duration.slice(0, obj.Duration.indexOf(":"));
-        var minutes = obj.Duration.split(":").pop();
         if (operation == 'add') {
-            $scope.selected.totalHours = $scope.selected.totalHours + (parseInt(hours)) + (parseInt(minutes) / 60);
+            $scope.selected.totalHours = addTimes($scope.selected.totalHours, obj.Duration);
         } else {
-            $scope.selected.totalHours = $scope.selected.totalHours - (parseInt(hours)) - (parseInt(minutes) / 60);
+            $scope.selected.totalHours = subTimes($scope.selected.totalHours, obj.Duration);
         }
     };
 
@@ -253,7 +251,6 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
                     $scope.errorMessage = success.data;
                 } else {
                     $scope.clients = success.data.results;
-                    $scope.getAssignedProjectsByClients();
                 }
             }, function(error) {
                 ionicToast.show(error, 'bottom', 2500, false);
@@ -330,6 +327,26 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
                 ionicToast.show(error, 'bottom', 2500, false);
             });
     };
+
+    function timeToMins(time) {
+        var b = time.split(':');
+        return b[0] * 60 + +b[1];
+    }
+
+    function timeFromMins(mins) {
+        function z(n) { return (n < 10 ? '0' : '') + n; }
+        var h = (mins / 60 | 0) % 24;
+        var m = mins % 60;
+        return z(h) + ':' + z(m);
+    }
+
+    function addTimes(t0, t1) {
+        return timeFromMins(timeToMins(t0) + timeToMins(t1));
+    }
+
+    function subTimes(t0, t1) {
+        return timeFromMins(timeToMins(t0) - timeToMins(t1));
+    }
 
     $scope.getTimesheetPreferences();
 });
