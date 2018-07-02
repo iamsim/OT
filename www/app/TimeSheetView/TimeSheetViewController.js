@@ -44,6 +44,7 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
     });
 
     $scope.enterTimeSheet = function() {
+        TimeSheetViewFactory.timeSheetEntryDate = $scope.calendar.currentDate;
         $state.go('timeSheetEntry');
     };
 
@@ -134,6 +135,11 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
             }, function(error) {
                 ionicToast.show(error, 'bottom', 2500, false);
             });
+    };
+
+    $scope.entrySelected = function(te) {
+        TimeSheetViewFactory.selectedTimeEntry = te;
+        $state.go('timeSheetEntry');
     };
 
     $scope.getTimeSheetPeriod(moment().format("YYYY"), moment().format("MM"), moment().format("DD"));

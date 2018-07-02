@@ -2,7 +2,8 @@
 
 angular.module('officeTimerApp').factory("TimeSheetViewFactory", function($q, $http, LoginFactory) {
     var factory = {
-        timeSheetEntryDate: null
+        timeSheetEntryDate: null,
+        selectedTimeEntry: null
     };
 
     var URL = LoginFactory.getBaseUrl();

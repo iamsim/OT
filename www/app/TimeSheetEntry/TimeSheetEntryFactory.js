@@ -1,9 +1,7 @@
 'use strict';
 
 angular.module('officeTimerApp').factory("TimeSheetEntryFactory", function($q, $http, LoginFactory) {
-    var factory = {
-        timeSheetEntryDate: null
-    };
+    var factory = {};
 
     var URL = LoginFactory.getBaseUrl();
 
@@ -102,6 +100,21 @@ angular.module('officeTimerApp').factory("TimeSheetEntryFactory", function($q, $
         $http({
             method: 'POST',
             url: URL + '/GetAssignedTasksForMobile',
+            data: obj,
+            headers: LoginFactory.headers
+        }).then(function(success) {
+            d.resolve(success);
+        }, function(error) {
+            d.reject(error);
+        });
+        return d.promise;
+    };
+
+    factory.addTimeEntry = function(obj) {
+        var d = $q.defer();
+        $http({
+            method: 'POST',
+            url: URL + '/AddTimeEntryAdvanced',
             data: obj,
             headers: LoginFactory.headers
         }).then(function(success) {

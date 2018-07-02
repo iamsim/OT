@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('officeTimerApp').controller('TimeSheetEntryController', function($scope, $state, $ionicPopup, $timeout, ionicTimePicker, ionicToast, TimeSheetEntryFactory) {
+angular.module('officeTimerApp').controller('TimeSheetEntryController', function($scope, $state, $ionicPopup, $timeout, ionicTimePicker, ionicToast, TimeSheetEntryFactory, TimeSheetViewFactory) {
 
     $scope.newTimesheetEntry = {
         IsBillable: false
@@ -14,7 +14,10 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         task: null,
         costCenter: null,
         workType: null,
-        totalHours: "0:0"
+        isBillable: false,
+        totalHours: "0:0",
+        date: TimeSheetViewFactory.timeSheetEntryDate,
+        timeSheetEntry: angular.copy(TimeSheetViewFactory.selectedTimeEntry)
     };
 
     $scope.currentRunningTime = {
@@ -173,22 +176,30 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
             ionicToast.show("Please select a task", 'bottom', false, 2500);
         } else if ($scope.timesheetPreferences.ShowWorkTypeInTimeSheet == 'true' && $scope.selected.workType == null) {
             ionicToast.show("Please select a work type", 'bottom', false, 2500);
-        } else if ($scope.timesheetPreferences.ShowCostCenterInTimeSheet == 'true' && $scope.selected.costCenter == null) {
-            ionicToast.show("Please select a cost center", 'bottom', false, 2500);
         } else {
             var obj = {
-                YearWS: moment(TimeSheetEntryFactory.timesheetEntryDate).format("YYYY"),
-                MonthWS: moment(TimeSheetEntryFactory.timesheetEntryDate).format("MM"),
-                DayWS: moment(TimeSheetEntryFactory.timesheetEntryDate).format("DD"),
+                YearWS: moment($scope.selected.date).format("YYYY"),
+                MonthWS: moment($scope.selected.date).format("MM"),
+                DayWS: moment($scope.selected.date).format("DD"),
                 AccountProjectId: $scope.selected.project.ProjectID,
                 AccountProjectTaskId: $scope.selected.task.TaskID,
-                TotalTime: "00:00",
+                TotalTime: $scope.selected.totalHours,
                 Description: "",
-                WorkType: $scope.selected.workType.WorkTypeID,
-                CostCenter: $scope.selected.costCenter.CostCenterID,
-                IsBillable: $scope.selected.IsBillable
+                WorkType: $scope.selected.workType.AccountWorkTypeId,
+                CostCenter: 0,
+                IsBillable: $scope.selected.isBillable
             };
-            console.log(obj);
+            TimeSheetEntryFactory.addTimeEntry(obj)
+                .then(function(success) {
+                    if (success.status == 500) {
+                        ionicToast.show(success.data, 'bottom', false, 2500)
+                    } else {
+                        ionicToast.show('Time entry added successfully!', 'bottom', false, 2500);
+                        history.back();
+                    }
+                }, function(error) {
+                    ionicToast.show(error, 'bottom', false, 2500);
+                });
         }
     };
 
@@ -224,9 +235,20 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         TimeSheetEntryFactory.getTimeSheetPreferences()
             .then(function(success) {
                 if (success.status == 500) {
-                    $scope.errorMessage = success.data;
+                    ionicToast.show(success.data, 'bottom', false, 2500)
                 } else {
                     $scope.timesheetPreferences = success.data.results[0];
+                    if ($scope.selected.timeSheetEntry != null) {
+                        TimeSheetViewFactory.selectedTimeEntry = null;
+                        //fill values
+                        $scope.selected.client = null;
+                        $scope.selected.project = null;
+                        $scope.selected.task = null;
+                        $scope.selected.costCenter = null;
+                        $scope.selected.workType = null;
+                        $scope.selected.isBillable = false;
+                        $scope.selected.totalHours = "0:0";
+                    }
                     if ($scope.timesheetPreferences.ShowClientInTimesheet == 'true') {
                         $scope.getAssignedClients();
                     } else {
@@ -240,7 +262,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
                     }
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', 2500, false);
+                ionicToast.show(error, 'bottom', false, 2500);
             });
     };
 
@@ -248,12 +270,12 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         TimeSheetEntryFactory.getAssignedClients()
             .then(function(success) {
                 if (success.status == 500) {
-                    $scope.errorMessage = success.data;
+                    ionicToast.show(success.data, 'bottom', false, 2500)
                 } else {
                     $scope.clients = success.data.results;
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', 2500, false);
+                ionicToast.show(error, 'bottom', false, 2500);
             });
     };
 
@@ -261,12 +283,12 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         TimeSheetEntryFactory.getAssignedProjects()
             .then(function(success) {
                 if (success.status == 500) {
-                    $scope.errorMessage = success.data;
+                    ionicToast.show(success.data, 'bottom', false, 2500)
                 } else {
                     $scope.projects = success.data.results;
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', 2500, false);
+                ionicToast.show(error, 'bottom', false, 2500);
             });
     };
 
@@ -277,12 +299,12 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         TimeSheetEntryFactory.getAssignedProjectsByClients(obj)
             .then(function(success) {
                 if (success.status == 500) {
-                    $scope.errorMessage = success.data;
+                    ionicToast.show(success.data, 'bottom', false, 2500)
                 } else {
                     $scope.projects = success.data.results;
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', 2500, false);
+                ionicToast.show(error, 'bottom', false, 2500);
             });
     };
 
@@ -293,12 +315,12 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         TimeSheetEntryFactory.getAssignedTasks(obj)
             .then(function(success) {
                 if (success.status == 500) {
-                    $scope.errorMessage = success.data;
+                    ionicToast.show(success.data, 'bottom', false, 2500)
                 } else {
                     $scope.tasks = success.data.results;
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', 2500, false);
+                ionicToast.show(error, 'bottom', false, 2500);
             });
     };
 
@@ -306,12 +328,12 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         TimeSheetEntryFactory.getWorkType()
             .then(function(success) {
                 if (success.status == 500) {
-                    $scope.errorMessage = success.data;
+                    ionicToast.show(success.data, 'bottom', false, 2500)
                 } else {
                     $scope.workTypes = success.data.results;
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', 2500, false);
+                ionicToast.show(error, 'bottom', false, 2500);
             });
     };
 
@@ -319,12 +341,12 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         TimeSheetEntryFactory.getCostCenter()
             .then(function(success) {
                 if (success.status == 500) {
-                    $scope.errorMessage = success.data;
+                    ionicToast.show(success.data, 'bottom', false, 2500)
                 } else {
                     $scope.costCenters = success.data.results;
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', 2500, false);
+                ionicToast.show(error, 'bottom', false, 2500);
             });
     };
 
