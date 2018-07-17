@@ -63,17 +63,17 @@ ion-item.item {
     width: 100%;
 }
 
-.popup-head {
+.timer-popup .popup-head {
     display: none;
 }
 
-.popup-body {
+.timer-popup .popup-body {
     background: #e5e5e5;
     text-align: center;
     font-size: 35px;
 }
 
-.popup-body {
+.timer-popup .popup-body {
     padding: 60px 0px;
 }
 

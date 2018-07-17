@@ -101,6 +101,20 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         setLabel: 'Set' //Optional
     };
 
+    function fillTimeLog(timeLogString) {
+        var returnArray = [];
+        var individualEntries = timeLogString.split('+');
+        for (var i = 0; i < individualEntries.length; i++) {
+            var timeEntries = individualEntries[i].split('-');
+            returnArray.push({
+                Start: timeEntries[0],
+                Stop: timeEntries[1],
+                Duration: timeEntries[2],
+            })
+        }
+        return returnArray;
+    }
+
     $scope.pickStartTime = function() {
         ionicTimePicker.openTimePicker(ipObj1);
     };
@@ -116,6 +130,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
     $scope.startTimer = function() {
         var myPopup = $ionicPopup.show({
             templateUrl: 'app/TimeSheetEntry/TimerTemplate.html',
+            cssClass: 'timer-popup',
             scope: $scope,
             buttons: $scope.buttonArray
         });
@@ -186,6 +201,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
                 TotalTime: $scope.selected.totalHours,
                 Description: "",
                 WorkType: $scope.selected.workType.AccountWorkTypeId,
+                TimeLog: parseTimeLog(),
                 CostCenter: 0,
                 IsBillable: $scope.selected.isBillable
             };
@@ -204,7 +220,9 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
     };
 
     $scope.addLoggedTime = function() {
-        if ($scope.timepicked.Duration != "0:0") {
+        if ($scope.timepicked.Duration.indexOf('-') != -1) {
+            ionicToast.show("Duration cannot be in negative value", 'bottom', false, 2500);
+        } else if ($scope.timepicked.Duration != "0:0") {
             var obj = angular.copy($scope.timepicked);
             $scope.loggedInTimes.push(obj);
             $scope.calculateTotalHours(obj, 'add');
@@ -246,8 +264,9 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
                         $scope.selected.task = null;
                         $scope.selected.costCenter = null;
                         $scope.selected.workType = null;
-                        $scope.selected.isBillable = false;
-                        $scope.selected.totalHours = "0:0";
+                        $scope.selected.isBillable = $scope.selected.timeSheetEntry.IsBillable;
+                        $scope.selected.totalHours = moment($scope.selected.timeSheetEntry.TotalTime).format("hh:mm");
+                        $scope.loggedInTimes = ($scope.selected.timeSheetEntry.TimeLog == "") ? [] : fillTimeLog($scope.selected.timeSheetEntry.TimeLog);
                     }
                     if ($scope.timesheetPreferences.ShowClientInTimesheet == 'true') {
                         $scope.getAssignedClients();
@@ -368,6 +387,19 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
 
     function subTimes(t0, t1) {
         return timeFromMins(timeToMins(t0) - timeToMins(t1));
+    }
+
+    function parseTimeLog() {
+        var finalString = "";
+        for (var i = 0; i < $scope.loggedInTimes.length; i++) {
+            var start = moment($scope.loggedInTimes[i].Start).format("hh:mm");
+            var stop = moment($scope.loggedInTimes[i].Stop).format("hh:mm");
+            finalString += start + '-' + stop + '-' + $scope.loggedInTimes[i].Duration;
+            if (i != ($scope.loggedInTimes.length - 1)) {
+                finalString += '+';
+            }
+        }
+        return finalString;
     }
 
     $scope.getTimesheetPreferences();

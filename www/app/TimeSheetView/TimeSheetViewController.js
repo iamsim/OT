@@ -1,12 +1,13 @@
 'use strict';
 
-angular.module('officeTimerApp').controller('TimeSheetViewController', function($scope, $state, ionicToast, TimeSheetViewFactory, LoginFactory) {
+angular.module('officeTimerApp').controller('TimeSheetViewController', function($scope, $state, ionicToast, TimeSheetViewFactory, LoginFactory, $ionicPopup) {
 
     $scope.calendar = {};
     $scope.monthviewDisplayEventTemplateUrl = 'app/TimeSheetView/EventDetailTemplate.html';
     $scope.changeMode = function(mode) {
         $scope.calendar.mode = mode;
     };
+    $scope.timeSheetSelectedTime = moment();
 
     $scope.weekNumber = parseInt(new Date().getDate() / 7) + 1;
     $scope.currentWeek = null;
@@ -35,6 +36,7 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
     };
 
     $scope.onTimeSelected = function(selectedTime, events, disabled) {
+        $scope.timeSheetSelectedTime = moment(selectedTime);
         $scope.getTimeSheetPeriod(moment(selectedTime).format("YYYY"), moment(selectedTime).format("MM"), moment(selectedTime).format("DD"));
         $scope.getTimeEntries(selectedTime);
     };
@@ -142,6 +144,34 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
         $state.go('timeSheetEntry');
     };
 
-    $scope.getTimeSheetPeriod(moment().format("YYYY"), moment().format("MM"), moment().format("DD"));
+    $scope.submit = function() {
+        var confirmPopup = $ionicPopup.confirm({
+            title: 'Submit Times',
+            template: 'Are you sure you want to submit?'
+        });
+        confirmPopup.then(function(res) {
+            if (res) {
+                var obj = {
+                    AccountEmployeeTimeEntryPeriodId: $scope.timesheetPeriod.TimesheetPeriodId
+                }
+                TimeSheetViewFactory.submitTimeSheet(obj)
+                    .then(function(success) {
+                        if (success.status == 500) {
+                            $scope.errorMessage = success.data;
+                        } else {
+                            $scope.errorMessage = null;
+                            ionicToast.show('Timesheet submitted successfully', 'bottom', 2500, false);
+                            $scope.getTimeSheetPeriod($scope.timeSheetSelectedTime.format("YYYY"), $scope.timeSheetSelectedTime.format("MM"), $scope.timeSheetSelectedTime.format("DD"));
+                        }
+                    }, function(error) {
+                        ionicToast.show(error, 'bottom', 2500, false);
+                    });
+            } else {
+                console.log('You are not sure');
+            }
+        });
+    };
+
+    $scope.getTimeSheetPeriod($scope.timeSheetSelectedTime.format("YYYY"), $scope.timeSheetSelectedTime.format("MM"), $scope.timeSheetSelectedTime.format("DD"));
     $scope.getTimeEntries($scope.calendar.currentDate);
 });

@@ -68,5 +68,20 @@ angular.module('officeTimerApp').factory("TimeSheetViewFactory", function($q, $h
         return d.promise;
     };
 
+    factory.submitTimeSheet = function(obj) {
+        var d = $q.defer();
+        $http({
+            method: 'POST',
+            url: URL + '/SubmitTimesheet',
+            data: obj,
+            headers: LoginFactory.headers
+        }).then(function(success) {
+            d.resolve(success);
+        }, function(error) {
+            d.reject(error);
+        });
+        return d.promise;
+    };
+
     return factory;
 });
