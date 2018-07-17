@@ -9,11 +9,11 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
     $scope.timesheetPreferences = null;
 
     $scope.selected = {
-        client: null,
-        project: null,
-        task: null,
-        costCenter: null,
-        workType: null,
+        clientId: null,
+        projectId: null,
+        taskId: null,
+        costCenterId: null,
+        workTypeId: null,
         isBillable: false,
         totalHours: "0:0",
         date: TimeSheetViewFactory.timeSheetEntryDate,
@@ -311,9 +311,9 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
             });
     };
 
-    $scope.getAssignedProjectsByClients = function(client) {
+    $scope.getAssignedProjectsByClients = function(clientId) {
         var obj = {
-            ClientId: client.Id
+            ClientId: clientId
         }
         TimeSheetEntryFactory.getAssignedProjectsByClients(obj)
             .then(function(success) {
@@ -327,9 +327,9 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
             });
     };
 
-    $scope.getAssignedTasks = function(project) {
+    $scope.getAssignedTasks = function(projectId) {
         var obj = {
-            AccountProjectId: project.ProjectID
+            AccountProjectId: projectId
         }
         TimeSheetEntryFactory.getAssignedTasks(obj)
             .then(function(success) {

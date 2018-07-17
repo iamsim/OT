@@ -9,7 +9,7 @@
                     <div class="input-label custom">
                         Client
                     </div>
-                    <select ng-model="selected.client" ng-options="client.ClientName for client in clients" ng-change="getAssignedProjectsByClients(selected.client)">
+                    <select ng-model="selected.clientId" ng-options="client.ClientId as client.ClientName for client in clients" ng-change="getAssignedProjectsByClients(selected.clientId)">
                         <option value="">--choose--</option>
                     </select>
                 </label>
@@ -17,7 +17,7 @@
                     <div class="input-label custom">
                         Project
                     </div>
-                    <select ng-model="selected.project" ng-options="project.ProjectName for project in projects" ng-change="getAssignedTasks(selected.project)">
+                    <select ng-model="selected.projectId" ng-options="project.ProjectID as project.ProjectName for project in projects" ng-change="getAssignedTasks(selected.projectId)">
                         <option value="">--choose--</option>
                     </select>
                 </label>
@@ -25,7 +25,7 @@
                     <div class="input-label custom">
                         Task
                     </div>
-                    <select ng-model="selected.task" ng-options="task.TaskName for task in tasks" ng-change="taskSelected(selected.task)">
+                    <select ng-model="selected.taskId" ng-options="task.Id as task.TaskName for task in tasks">
                         <option value="">--choose--</option>
                     </select>
                 </label>
@@ -33,7 +33,7 @@
                     <div class="input-label custom">
                         Work Type
                     </div>
-                    <select ng-model="selected.workType" ng-options="workType.AccountWorkType for workType in workTypes">
+                    <select ng-model="selected.workTypeId" ng-options="workType.AccountWorkTypeId as workType.AccountWorkType for workType in workTypes">
                         <option value="">--choose--</option>
                     </select>
                 </label>
@@ -41,7 +41,7 @@
                     <div class="input-label custom">
                         Cost Center
                     </div>
-                    <select ng-model="selected.costCenter" ng-options="costCenter.CostCenterName for costCenter in costCenters">
+                    <select ng-model="selected.costCenterId" ng-options="costCenter.CostCenterId as costCenter.CostCenterName for costCenter in costCenters">
                         <option value="">--choose--</option>
                     </select>
                 </label>
