@@ -42,7 +42,7 @@ angular.module('officeTimerApp').factory("TimeSheetViewFactory", function($q, $h
         var d = $q.defer();
         $http({
             method: 'POST',
-            url: URL + '/GetTimeEntriesByEmployeeIdAndDateRange',
+            url: URL + '/GetTimeEntriesByEmployeeIdAndDateRangeAdvanced',
             data: obj,
             headers: LoginFactory.headers
         }).then(function(success) {

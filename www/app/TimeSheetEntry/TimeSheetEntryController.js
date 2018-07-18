@@ -7,6 +7,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
     };
 
     $scope.timesheetPreferences = null;
+    $scope.isEdit = false;
 
     $scope.selected = {
         clientId: null,
@@ -185,37 +186,52 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
     });
 
     $scope.saveTimeSheet = function() {
-        if ($scope.selected.project == null) {
+        if ($scope.selected.projectId == null) {
             ionicToast.show("Please select a project", 'bottom', false, 2500);
-        } else if ($scope.selected.task == null) {
+        } else if ($scope.selected.taskId == null) {
             ionicToast.show("Please select a task", 'bottom', false, 2500);
-        } else if ($scope.timesheetPreferences.ShowWorkTypeInTimeSheet == 'true' && $scope.selected.workType == null) {
+        } else if ($scope.timesheetPreferences.ShowWorkTypeInTimeSheet == 'true' && $scope.selected.workTypeId == null) {
             ionicToast.show("Please select a work type", 'bottom', false, 2500);
         } else {
             var obj = {
                 YearWS: moment($scope.selected.date).format("YYYY"),
                 MonthWS: moment($scope.selected.date).format("MM"),
                 DayWS: moment($scope.selected.date).format("DD"),
-                AccountProjectId: $scope.selected.project.ProjectID,
-                AccountProjectTaskId: $scope.selected.task.TaskID,
+                AccountProjectId: $scope.selected.projectId,
+                AccountProjectTaskId: $scope.selected.taskId,
                 TotalTime: $scope.selected.totalHours,
                 Description: "",
-                WorkType: $scope.selected.workType.AccountWorkTypeId,
+                WorkType: $scope.selected.workTypeId,
                 TimeLog: parseTimeLog(),
                 CostCenter: 0,
                 IsBillable: $scope.selected.isBillable
             };
-            TimeSheetEntryFactory.addTimeEntry(obj)
-                .then(function(success) {
-                    if (success.status == 500) {
-                        ionicToast.show(success.data, 'bottom', false, 2500)
-                    } else {
-                        ionicToast.show('Time entry added successfully!', 'bottom', false, 2500);
-                        history.back();
-                    }
-                }, function(error) {
-                    ionicToast.show(error, 'bottom', false, 2500);
-                });
+            if ($scope.isEdit) {
+                obj.AccountEmployeeTimeEntryId = $scope.selected.timeSheetEntry.AccountEmployeeTimeEntryId;
+                TimeSheetEntryFactory.updateTimeEntry(obj)
+                    .then(function(success) {
+                        if (success.status == 500) {
+                            ionicToast.show(success.data, 'bottom', false, 2500)
+                        } else {
+                            ionicToast.show('Time entry updated successfully!', 'bottom', false, 2500);
+                            history.back();
+                        }
+                    }, function(error) {
+                        ionicToast.show(error, 'bottom', false, 2500);
+                    });
+            } else {
+                TimeSheetEntryFactory.addTimeEntry(obj)
+                    .then(function(success) {
+                        if (success.status == 500) {
+                            ionicToast.show(success.data, 'bottom', false, 2500)
+                        } else {
+                            ionicToast.show('Time entry added successfully!', 'bottom', false, 2500);
+                            history.back();
+                        }
+                    }, function(error) {
+                        ionicToast.show(error, 'bottom', false, 2500);
+                    });
+            }
         }
     };
 
@@ -257,16 +273,19 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
                 } else {
                     $scope.timesheetPreferences = success.data.results[0];
                     if ($scope.selected.timeSheetEntry != null) {
+                        $scope.isEdit = true;
                         TimeSheetViewFactory.selectedTimeEntry = null;
                         //fill values
-                        $scope.selected.client = null;
-                        $scope.selected.project = null;
-                        $scope.selected.task = null;
-                        $scope.selected.costCenter = null;
-                        $scope.selected.workType = null;
+                        $scope.selected.clientId = $scope.selected.timeSheetEntry.ClientId;
+                        $scope.selected.projectId = $scope.selected.timeSheetEntry.ProjectId;
+                        $scope.selected.taskId = $scope.selected.timeSheetEntry.TaskId;
+                        $scope.selected.costCenterId = ($scope.selected.timeSheetEntry.CostCenterId == "") ? 0 : $scope.selected.timeSheetEntry.CostCenterId;
+                        $scope.selected.workTypeId = $scope.selected.timeSheetEntry.WorkTypeId;
                         $scope.selected.isBillable = $scope.selected.timeSheetEntry.IsBillable;
                         $scope.selected.totalHours = moment($scope.selected.timeSheetEntry.TotalTime).format("hh:mm");
                         $scope.loggedInTimes = ($scope.selected.timeSheetEntry.TimeLog == "") ? [] : fillTimeLog($scope.selected.timeSheetEntry.TimeLog);
+                        $scope.getAssignedProjectsByClients($scope.selected.clientId);
+                        $scope.getAssignedTasks($scope.selected.projectId);
                     }
                     if ($scope.timesheetPreferences.ShowClientInTimesheet == 'true') {
                         $scope.getAssignedClients();
@@ -363,6 +382,11 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
                     ionicToast.show(success.data, 'bottom', false, 2500)
                 } else {
                     $scope.costCenters = success.data.results;
+                    var defaultCostCenter = {
+                        CostCenterId: 0,
+                        CostCenterName: "Default Cost Center"
+                    };
+                    $scope.costCenters.splice(0, 0, defaultCostCenter);
                 }
             }, function(error) {
                 ionicToast.show(error, 'bottom', false, 2500);
@@ -391,12 +415,23 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
 
     function parseTimeLog() {
         var finalString = "";
-        for (var i = 0; i < $scope.loggedInTimes.length; i++) {
-            var start = moment($scope.loggedInTimes[i].Start).format("hh:mm");
-            var stop = moment($scope.loggedInTimes[i].Stop).format("hh:mm");
-            finalString += start + '-' + stop + '-' + $scope.loggedInTimes[i].Duration;
-            if (i != ($scope.loggedInTimes.length - 1)) {
-                finalString += '+';
+        if ($scope.isEdit) {
+            for (var i = 0; i < $scope.loggedInTimes.length; i++) {
+                var start = $scope.loggedInTimes[i].Start;
+                var stop = $scope.loggedInTimes[i].Stop;
+                finalString += start + '-' + stop + '-' + $scope.loggedInTimes[i].Duration;
+                if (i != ($scope.loggedInTimes.length - 1)) {
+                    finalString += '+';
+                }
+            }
+        } else {
+            for (var i = 0; i < $scope.loggedInTimes.length; i++) {
+                var start = moment($scope.loggedInTimes[i].Start).format("hh:mm");
+                var stop = moment($scope.loggedInTimes[i].Stop).format("hh:mm");
+                finalString += start + '-' + stop + '-' + $scope.loggedInTimes[i].Duration;
+                if (i != ($scope.loggedInTimes.length - 1)) {
+                    finalString += '+';
+                }
             }
         }
         return finalString;
