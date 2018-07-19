@@ -21,7 +21,8 @@
                     Time Entry Details
                     <span style="float: right;" ng-if="totalHours != null">Total Hours: {{totalHours}}</span>
                 </div>
-                <a href class="item" ng-repeat="te in timeEntries" ng-click="entrySelected(te)">
+                <!-- if time entry is not yet submitted -->
+                <a href class="item" ng-repeat="te in timeEntries" ng-click="entrySelected(te)" ng-if="timesheetPeriod.DisableTimeEntry == 'false'">
                     <div style="overflow: hidden; text-overflow: ellipsis;width: 80%;float:left;">
                         <h2>{{te.ProjectName}}</h2>
                         <p>{{te.ClientName}} | {{te.TaskName}}</p>
@@ -30,6 +31,16 @@
                         {{te.TotalTime | date: 'HH:mm'}}
                     </span>
                 </a>
+                <!-- if time entry is already submitted -->
+                <div href class="item" ng-repeat="te in timeEntries" ng-if="timesheetPeriod.DisableTimeEntry == 'true'">
+                    <div style="overflow: hidden; text-overflow: ellipsis;width: 80%;float:left;">
+                        <h2>{{te.ProjectName}}</h2>
+                        <p>{{te.ClientName}} | {{te.TaskName}}</p>
+                    </div>
+                    <span class="item-note" style="line-height: 41px;">
+                        {{te.TotalTime | date: 'HH:mm'}}
+                    </span>
+                </div>
             </div>
             <div class="row" ng-if="timeEntries.length == 0">
                 <div class="col text-center">
