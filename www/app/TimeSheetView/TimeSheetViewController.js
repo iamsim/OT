@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('officeTimerApp').controller('TimeSheetViewController', function($scope, $state, ionicToast, TimeSheetViewFactory, LoginFactory, $ionicPopup) {
+angular.module('officeTimerApp').controller('TimeSheetViewController', function($scope, $state, ionicToast, TimeSheetViewFactory, LoginFactory, $ionicPopup, TimeSheetEntryFactory) {
 
     $scope.calendar = {};
     $scope.monthviewDisplayEventTemplateUrl = 'app/TimeSheetView/EventDetailTemplate.html';
@@ -8,6 +8,7 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
         $scope.calendar.mode = mode;
     };
     $scope.timeSheetSelectedTime = moment();
+    $scope.timesheetPreferences = null;
 
     $scope.weekNumber = parseInt(new Date().getDate() / 7) + 1;
     $scope.currentWeek = null;
@@ -33,12 +34,6 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
         today.setHours(0, 0, 0, 0);
         currentCalendarDate.setHours(0, 0, 0, 0);
         return today.getTime() === currentCalendarDate.getTime();
-    };
-
-    $scope.onTimeSelected = function(selectedTime, events, disabled) {
-        $scope.timeSheetSelectedTime = moment(selectedTime);
-        $scope.getTimeSheetPeriod(moment(selectedTime).format("YYYY"), moment(selectedTime).format("MM"), moment(selectedTime).format("DD"));
-        $scope.getTimeEntries(selectedTime);
     };
 
     $scope.$watch('calendar.currentDate', function(nv, ov) {
@@ -97,7 +92,7 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
                 startTime: moment(new Date(daysWithHours[i].TimeEntryDate)).add(1, 'days'),
                 endTime: moment(new Date(daysWithHours[i].TimeEntryDate)).add(1, 'days'),
                 allDay: true,
-                logged: false
+                status: $scope.timesheetPeriod.TimesheetStatus
             });
         }
         $scope.calendar.eventSource = events;
@@ -172,6 +167,27 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
         });
     };
 
+    $scope.getTimesheetPreferences = function() {
+        TimeSheetEntryFactory.getTimeSheetPreferences()
+            .then(function(success) {
+                if (success.status == 500) {
+                    ionicToast.show(success.data, 'bottom', false, 2500)
+                } else {
+                    $scope.timesheetPreferences = success.data.results[0];
+                    TimeSheetViewFactory.timesheetPreferences = success.data.results[0];
+                }
+            }, function(error) {
+                ionicToast.show(error, 'bottom', false, 2500);
+            });
+    };
+
+    $scope.$watch('calendar.currentDate', function(newTime, oldTime) {
+        $scope.timeSheetSelectedTime = moment(newTime);
+        $scope.getTimeSheetPeriod(moment(newTime).format("YYYY"), moment(newTime).format("MM"), moment(newTime).format("DD"));
+        $scope.getTimeEntries(newTime);
+    });
+
     $scope.getTimeSheetPeriod($scope.timeSheetSelectedTime.format("YYYY"), $scope.timeSheetSelectedTime.format("MM"), $scope.timeSheetSelectedTime.format("DD"));
     $scope.getTimeEntries($scope.calendar.currentDate);
+    $scope.getTimesheetPreferences();
 });

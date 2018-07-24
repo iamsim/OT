@@ -25,9 +25,40 @@ ion-item.item {
     height: 37px;
 }
 
-.monthview-logged-background {
-    background-color: #CDDC39;
+.monthview-submitted {
+    background-color: #6396fb;
     color: white;
+}
+
+.monthview-approved {
+    background-color: #44ca6f;
+    color: white;
+}
+
+.monthview-not-submitted {
+    background-color: #f3d71b;
+    color: white;
+}
+
+.monthview-rejected {
+    background-color: #ff9999;
+    color: white;
+}
+
+.submitted {
+    color: #6396fb;
+}
+
+.approved {
+    color: #44ca6f;
+}
+
+.not-submitted {
+    color: #f3d71b;
+}
+
+.rejected {
+    color: #ff9999;
 }
 
 .monthview-current {
@@ -116,4 +147,8 @@ ion-item.item {
 .subheader-text {
     width: 100%;
     line-height: 34px;
+}
+
+.no-padding {
+    padding: 0px;
 }

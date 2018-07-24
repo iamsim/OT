@@ -2,24 +2,26 @@
 
 angular.module('officeTimerApp').controller('TimeSheetEntryController', function($scope, $state, $ionicPopup, $timeout, ionicTimePicker, ionicToast, TimeSheetEntryFactory, TimeSheetViewFactory) {
 
-    $scope.newTimesheetEntry = {
-        IsBillable: false
-    };
-
-    $scope.timesheetPreferences = null;
-    $scope.isEdit = false;
-
     $scope.selected = {
         clientId: null,
         projectId: null,
         taskId: null,
-        costCenterId: null,
-        workTypeId: null,
+        costCenterId: -1,
+        workTypeId: -1,
         isBillable: false,
         totalHours: "0:0",
         date: TimeSheetViewFactory.timeSheetEntryDate,
-        timeSheetEntry: angular.copy(TimeSheetViewFactory.selectedTimeEntry)
+        timeSheetEntry: angular.copy(TimeSheetViewFactory.selectedTimeEntry),
+        description: ""
     };
+
+    $scope.timesheetPreferences = TimeSheetViewFactory.timesheetPreferences;
+
+    $scope.newTimesheetEntry = {
+        IsBillable: false
+    };
+
+    $scope.isEdit = false;
 
     $scope.currentRunningTime = {
         Start: null,
@@ -200,11 +202,11 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
                 AccountProjectId: $scope.selected.projectId,
                 AccountProjectTaskId: $scope.selected.taskId,
                 TotalTime: $scope.selected.totalHours,
-                Description: "",
                 WorkType: $scope.selected.workTypeId,
                 TimeLog: parseTimeLog(),
-                CostCenter: 0,
-                IsBillable: $scope.selected.isBillable
+                CostCenter: $scope.selected.costCenterId,
+                IsBillable: $scope.selected.isBillable,
+                Description: $scope.selected.description
             };
             if ($scope.isEdit) {
                 obj.AccountEmployeeTimeEntryId = $scope.selected.timeSheetEntry.AccountEmployeeTimeEntryId;
@@ -265,46 +267,14 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         }
     };
 
-    $scope.getTimesheetPreferences = function() {
-        TimeSheetEntryFactory.getTimeSheetPreferences()
-            .then(function(success) {
-                if (success.status == 500) {
-                    ionicToast.show(success.data, 'bottom', false, 2500)
-                } else {
-                    $scope.timesheetPreferences = success.data.results[0];
-                    if ($scope.selected.timeSheetEntry != null) {
-                        $scope.isEdit = true;
-                        TimeSheetViewFactory.selectedTimeEntry = null;
-                        //fill values
-                        $scope.selected.clientId = $scope.selected.timeSheetEntry.ClientId;
-                        $scope.selected.projectId = $scope.selected.timeSheetEntry.ProjectId;
-                        $scope.selected.taskId = $scope.selected.timeSheetEntry.TaskId;
-                        $scope.selected.costCenterId = ($scope.selected.timeSheetEntry.CostCenterId == "") ? 0 : $scope.selected.timeSheetEntry.CostCenterId;
-                        $scope.selected.workTypeId = $scope.selected.timeSheetEntry.WorkTypeId;
-                        $scope.selected.isBillable = $scope.selected.timeSheetEntry.IsBillable;
-                        $scope.selected.totalHours = moment($scope.selected.timeSheetEntry.TotalTime).format("hh:mm");
-                        $scope.loggedInTimes = ($scope.selected.timeSheetEntry.TimeLog == "") ? [] : fillTimeLog($scope.selected.timeSheetEntry.TimeLog);
-                        $scope.getAssignedProjectsByClients($scope.selected.clientId);
-                        $scope.getAssignedTasks($scope.selected.projectId);
-                    }
-                    if ($scope.timesheetPreferences.ShowClientInTimesheet == 'true') {
-                        $scope.getAssignedClients();
-                    } else {
-                        $scope.getAssignedProjects()
-                    }
-                    if ($scope.timesheetPreferences.ShowWorkTypeInTimeSheet == 'true') {
-                        $scope.getWorkType();
-                    }
-                    if ($scope.timesheetPreferences.ShowCostCenterInTimeSheet == 'true') {
-                        $scope.getCostCenter();
-                    }
-                }
-            }, function(error) {
-                ionicToast.show(error, 'bottom', false, 2500);
-            });
-    };
-
     $scope.getAssignedClients = function() {
+        if (!$scope.isEdit) {
+            $scope.clients = [];
+            $scope.projects = [];
+            $scope.tasks = [];
+            $scope.selected.projectId = null;
+            $scope.selected.taskId = null;
+        }
         TimeSheetEntryFactory.getAssignedClients()
             .then(function(success) {
                 if (success.status == 500) {
@@ -318,6 +288,11 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
     };
 
     $scope.getAssignedProjects = function() {
+        if (!$scope.isEdit) {
+            $scope.projects = [];
+            $scope.tasks = [];
+            $scope.selected.taskId = null;
+        }
         TimeSheetEntryFactory.getAssignedProjects()
             .then(function(success) {
                 if (success.status == 500) {
@@ -331,38 +306,53 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
     };
 
     $scope.getAssignedProjectsByClients = function(clientId) {
-        var obj = {
-            ClientId: clientId
+        if (!$scope.isEdit) {
+            $scope.projects = [];
+            $scope.tasks = [];
+            $scope.selected.projectId = null;
+            $scope.selected.taskId = null;
         }
-        TimeSheetEntryFactory.getAssignedProjectsByClients(obj)
-            .then(function(success) {
-                if (success.status == 500) {
-                    ionicToast.show(success.data, 'bottom', false, 2500)
-                } else {
-                    $scope.projects = success.data.results;
-                }
-            }, function(error) {
-                ionicToast.show(error, 'bottom', false, 2500);
-            });
+        if (clientId != null) {
+            var obj = {
+                ClientId: clientId
+            }
+            TimeSheetEntryFactory.getAssignedProjectsByClients(obj)
+                .then(function(success) {
+                    if (success.status == 500) {
+                        ionicToast.show(success.data, 'bottom', false, 2500)
+                    } else {
+                        $scope.projects = success.data.results;
+                    }
+                }, function(error) {
+                    ionicToast.show(error, 'bottom', false, 2500);
+                });
+        }
     };
 
     $scope.getAssignedTasks = function(projectId) {
-        var obj = {
-            AccountProjectId: projectId
+        if (!$scope.isEdit) {
+            $scope.tasks = [];
+            $scope.selected.taskId = null;
         }
-        TimeSheetEntryFactory.getAssignedTasks(obj)
-            .then(function(success) {
-                if (success.status == 500) {
-                    ionicToast.show(success.data, 'bottom', false, 2500)
-                } else {
-                    $scope.tasks = success.data.results;
-                }
-            }, function(error) {
-                ionicToast.show(error, 'bottom', false, 2500);
-            });
+        if (projectId != null) {
+            var obj = {
+                AccountProjectId: projectId
+            }
+            TimeSheetEntryFactory.getAssignedTasks(obj)
+                .then(function(success) {
+                    if (success.status == 500) {
+                        ionicToast.show(success.data, 'bottom', false, 2500)
+                    } else {
+                        $scope.tasks = success.data.results;
+                    }
+                }, function(error) {
+                    ionicToast.show(error, 'bottom', false, 2500);
+                });
+        }
     };
 
     $scope.getWorkType = function() {
+        $scope.workTypes = [];
         TimeSheetEntryFactory.getWorkType()
             .then(function(success) {
                 if (success.status == 500) {
@@ -376,17 +366,13 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
     };
 
     $scope.getCostCenter = function() {
+        $scope.costcenters = [];
         TimeSheetEntryFactory.getCostCenter()
             .then(function(success) {
                 if (success.status == 500) {
                     ionicToast.show(success.data, 'bottom', false, 2500)
                 } else {
                     $scope.costCenters = success.data.results;
-                    var defaultCostCenter = {
-                        CostCenterId: 0,
-                        CostCenterName: "Default Cost Center"
-                    };
-                    $scope.costCenters.splice(0, 0, defaultCostCenter);
                 }
             }, function(error) {
                 ionicToast.show(error, 'bottom', false, 2500);
@@ -437,5 +423,31 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         return finalString;
     }
 
-    $scope.getTimesheetPreferences();
+    if ($scope.selected.timeSheetEntry != null) {
+        $scope.isEdit = true;
+        TimeSheetViewFactory.selectedTimeEntry = null;
+        //fill values
+        $scope.selected.clientId = $scope.selected.timeSheetEntry.ClientId;
+        $scope.selected.projectId = $scope.selected.timeSheetEntry.ProjectId;
+        $scope.selected.taskId = $scope.selected.timeSheetEntry.TaskId;
+        $scope.selected.costCenterId = $scope.selected.timeSheetEntry.CostCenterId;
+        $scope.selected.workTypeId = $scope.selected.timeSheetEntry.WorkTypeId;
+        $scope.selected.isBillable = $scope.selected.timeSheetEntry.IsBillable;
+        $scope.selected.description = $scope.selected.timeSheetEntry.Description;
+        $scope.selected.totalHours = moment($scope.selected.timeSheetEntry.TotalTime).format("hh:mm");
+        $scope.loggedInTimes = ($scope.selected.timeSheetEntry.TimeLog == "") ? [] : fillTimeLog($scope.selected.timeSheetEntry.TimeLog);
+        $scope.getAssignedProjectsByClients($scope.selected.clientId);
+        $scope.getAssignedTasks($scope.selected.projectId);
+    }
+    if ($scope.timesheetPreferences.ShowClientInTimesheet == 'true') {
+        $scope.getAssignedClients();
+    } else {
+        $scope.getAssignedProjects()
+    }
+    if ($scope.timesheetPreferences.ShowWorkTypeInTimeSheet == 'true') {
+        $scope.getWorkType();
+    }
+    if ($scope.timesheetPreferences.ShowCostCenterInTimeSheet == 'true') {
+        $scope.getCostCenter();
+    }
 });

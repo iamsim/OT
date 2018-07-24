@@ -3,7 +3,7 @@
         <ion-nav-back-button></ion-nav-back-button>
     </ion-nav-bar>
     <ion-content class="has-heade">
-        <div class="card">
+        <div class="card" style="margin-bottom: 0px;">
             <div class="list">
                 <label class="item item-input item-select" ng-if="timesheetPreferences.ShowClientInTimesheet == 'true'">
                     <div class="input-label custom">
@@ -58,6 +58,11 @@
                 </div>
             </div>
         </div>
+        <div class="row no-padding" style="margin: 15px !important;width: auto;">
+            <div class="col no-padding">
+                <textarea style="width:100%;padding: 10px;" name="descriptionTextArea" placeholder="Description" rows="4" ng-model="selected.description"></textarea>
+            </div>
+        </div>
         <div class="row" style="padding-top:0px; padding-bottom:0px;">
             <div class="col" style="padding-top:0px; padding-bottom:0px;">
                 <button ng-click="startTimer()" class="button button-stable button-text-custom icon-left ion-android-stopwatch">Start Timer</button>
@@ -68,7 +73,7 @@
                 </div>
             </div>
         </div>
-        <div class="row manual-time-entry" style="margin: 10px 0px;">
+        <div class="row manual-time-entry" style="margin: 10px 0px;" ng-if="timesheetPreferences.ShowClockStartEnd == 'true'">
             <div class="col col-80" style="padding: 0">
                 <div class="row" style="padding: 0">
                     <div class="col text-center" style="padding: 0">
@@ -124,8 +129,8 @@
                 </div>
             </div>
         </div>
-        <div class="padding">
-            <button class="button button-block button-custom" ng-click="saveTimeSheet()">Save</button>
-        </div>
     </ion-content>
+    <ion-footer-bar class="bar-custom button-footer-bar custom-footer" style="padding:0;border:none;">
+        <button style="border-radius:0px; width:100%;" class="button button-custom loginButton" ng-click="saveTimeSheet()">Save</button>
+    </ion-footer-bar>
 </ion-view>

@@ -3,9 +3,9 @@
 angular.module('officeTimerApp').controller('LoginController', function($scope, $state, LoginFactory, ionicToast) {
 
     $scope.loginData = {
-        base_url: "https://",
-        username: "",
-        password: ""
+        base_url: "https://next.officetimer.com",
+        username: "kalyan713@co.com123",
+        password: "welcome1#"
     };
 
     $scope.errorMessage = null;

@@ -2,17 +2,17 @@
     <ion-header-bar class="bar-custom">
         <h2 class="title">{{viewTitle}}</h2>
         <div class="buttons secondary">
-            <button class="button button-icon ion-plus-round" ng-click="enterTimeSheet()"></button>
+            <button class="button button-icon ion-plus-round" ng-click="enterTimeSheet()" ng-if="timesheetPeriod.DisableTimeEntry == 'false'"></button>
         </div>
     </ion-header-bar>
 
     <div class="bar bar-subheader bar-default">
-        <div class="subheader-text text-center">{{currentWeek}} <span style="color:#1c94c9;">({{timesheetPeriod.TimesheetStatus}})</span></div>
+        <div class="subheader-text text-center">{{currentWeek}} <span ng-class="{'submitted': timesheetPeriod.TimesheetStatus == 'Submitted', 'approved': timesheetPeriod.TimesheetStatus == 'Approved', 'rejected': timesheetPeriod.TimesheetStatus == 'Rejected', 'not-submitted': timesheetPeriod.TimesheetStatus == 'Not Submitted'}">({{timesheetPeriod.TimesheetStatus}})</span></div>
     </div>
 
     <div class="calendar-area">
-        <calendar format-month-title="MMMM" event-source="calendar.eventSource" monthview-display-event-template-url="monthviewDisplayEventTemplateUrl" show-event-detail="false" title-changed="onViewTitleChanged(title)" time-selected="onTimeSelected(selectedTime, events, disabled)"
-            ng-model="calendar.currentDate" calendar-mode="calendar.mode" event-selected="onEventSelected(event)" step="15"></calendar>
+        <calendar format-month-title="MMMM" event-source="calendar.eventSource" monthview-display-event-template-url="monthviewDisplayEventTemplateUrl" show-event-detail="false" title-changed="onViewTitleChanged(title)" ng-model="calendar.currentDate" calendar-mode="calendar.mode"
+            step="15"></calendar>
     </div>
     <ion-content class="main-content" ng-class="{'has-footer':timesheetPeriod.DisableTimeEntry == 'false'}">
         <div class="list-area">
@@ -22,7 +22,7 @@
                     <span style="float: right;" ng-if="totalHours != null">Total Hours: {{totalHours}}</span>
                 </div>
                 <!-- if time entry is not yet submitted -->
-                <a href class="item" ng-repeat="te in timeEntries" ng-click="entrySelected(te)" ng-if="timesheetPeriod.DisableTimeEntry == 'false'">
+                <a href class="item" ng-repeat="te in timeEntries" ng-click="entrySelected(te)" ng-if="(timesheetPeriod.TimesheetStatus == 'Approved' && timesheetPreferences.LockApprovedRecords == 'false') || (timesheetPeriod.TimesheetStatus == 'Submitted' && timesheetPreferences.LockSubmittedRecords == 'false') || timesheetPeriod.TimesheetStatus == 'Not Submitted' || timesheetPeriod.TimesheetStatus == 'Rejected'">
                     <div style="overflow: hidden; text-overflow: ellipsis;width: 80%;float:left;">
                         <h2>{{te.ProjectName}}</h2>
                         <p>{{te.ClientName}} | {{te.TaskName}}</p>
