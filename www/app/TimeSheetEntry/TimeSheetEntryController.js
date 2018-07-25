@@ -147,7 +147,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         $timeout(function() {
             $scope.timerState = 'running';
             $scope.$broadcast('timer-start');
-            $scope.currentRunningTime.Start = moment().format("hh:mm");
+            $scope.currentRunningTime.Start = new Date();
         }, 100);
     };
 
@@ -174,7 +174,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
 
     $scope.$on('timer-stopped', function(event, data) {
         if ($scope.timerState == 'stopped') {
-            $scope.currentRunningTime.Stop = moment().format("hh:mm");
+            $scope.currentRunningTime.Stop = new Date();
             $scope.currentRunningTime.Duration = data.hours + ":" + data.minutes;
             console.log($scope.currentRunningTime);
             $scope.loggedInTimes.push($scope.currentRunningTime);
@@ -434,7 +434,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         $scope.selected.workTypeId = $scope.selected.timeSheetEntry.WorkTypeId;
         $scope.selected.isBillable = $scope.selected.timeSheetEntry.IsBillable;
         $scope.selected.description = $scope.selected.timeSheetEntry.Description;
-        $scope.selected.totalHours = moment($scope.selected.timeSheetEntry.TotalTime).format("hh:mm");
+        $scope.selected.totalHours = moment($scope.selected.timeSheetEntry.TotalTime).format("HH:mm");
         $scope.loggedInTimes = ($scope.selected.timeSheetEntry.TimeLog == "") ? [] : fillTimeLog($scope.selected.timeSheetEntry.TimeLog);
         $scope.getAssignedProjectsByClients($scope.selected.clientId);
         $scope.getAssignedTasks($scope.selected.projectId);
