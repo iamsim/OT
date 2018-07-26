@@ -73,7 +73,7 @@
                 </div>
             </div>
         </div>
-        <div class="row manual-time-entry" style="margin: 10px 0px;" ng-if="timesheetPreferences.ShowClockStartEnd == 'true'">
+        <div class="row manual-time-entry" style="margin: 10px 0px;">
             <div class="col col-80" style="padding: 0">
                 <div class="row" style="padding: 0">
                     <div class="col text-center" style="padding: 0">
@@ -88,10 +88,10 @@
                 </div>
                 <div class="row" style="padding: 0; margin: 0;">
                     <div class="col text-center" style="padding-bottom: 0;" ng-click="pickStartTime()">
-                        <div style="border-bottom: 1px dashed;width: 70%;margin: auto;">{{timepicked.Start | date: 'hh:mm'}}</div>
+                        <div style="border-bottom: 1px dashed;width: 70%;margin: auto;">{{timepicked.Start | date: 'HH:mm'}}</div>
                     </div>
                     <div class="col text-center" style="padding-bottom: 0;" ng-click="pickEndTime()">
-                        <div style="border-bottom: 1px dashed;width: 70%;margin: auto;">{{timepicked.Stop | date: 'hh:mm'}}</div>
+                        <div style="border-bottom: 1px dashed;width: 70%;margin: auto;">{{timepicked.Stop | date: 'HH:mm'}}</div>
                     </div>
                     <div class="col text-center" style="padding-bottom: 0;">
                         {{timepicked.Duration | date: 'hh:mm'}}
@@ -121,8 +121,8 @@
                 </div>
             </div>
             <div class="row" ng-repeat="lot in loggedInTimes">
-                <div class="col text-center">{{lot.Start | date: 'hh:mm'}}</div>
-                <div class="col text-center">{{lot.Stop | date: 'hh:mm'}}</div>
+                <div class="col text-center">{{lot.Start | date: 'HH:mm'}}</div>
+                <div class="col text-center">{{lot.Stop | date: 'HH:mm'}}</div>
                 <div class="col text-center">{{lot.Duration}}</div>
                 <div class="col text-center">
                     <i class="icon ion-trash-b custom" ng-click="deleteTime($index)"></i>

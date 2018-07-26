@@ -80,7 +80,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
                 $scope.timepicked.Start.setMinutes(selectedTime.getUTCMinutes());
             }
         },
-        format: 12, //Optional
+        format: 24, //Optional
         step: 1,
         setLabel: 'Set' //Optional
     };
@@ -99,7 +99,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
                 $scope.timepicked.Duration = parseInt(duration.asHours()) + ":" + (parseInt(duration.asMinutes()) % 60);
             }
         },
-        format: 12, //Optional
+        format: 24, //Optional
         step: 1,
         setLabel: 'Set' //Optional
     };

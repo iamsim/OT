@@ -25,7 +25,7 @@ angular.module('officeTimerApp').controller('LoginController', function($scope, 
                         // $state.go('timeSheetView');
                     }
                 }, function(error) {
-                    ionicToast.show(error, 'bottom', 2500, false);
+                    ionicToast.show(error, 'bottom', false, 2500);
                 });
         }
     };
@@ -40,7 +40,7 @@ angular.module('officeTimerApp').controller('LoginController', function($scope, 
                     $scope.getAccountEmployeeId();
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', 2500, false);
+                ionicToast.show(error, 'bottom', false, 2500);
             });
     };
 
@@ -54,7 +54,7 @@ angular.module('officeTimerApp').controller('LoginController', function($scope, 
                     $state.go('timeSheetView');
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', 2500, false);
+                ionicToast.show(error, 'bottom', false, 2500);
             });
     };
 
