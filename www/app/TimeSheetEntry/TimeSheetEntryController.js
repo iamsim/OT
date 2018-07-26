@@ -416,23 +416,17 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
 
     function parseTimeLog() {
         var finalString = "";
-        if ($scope.isEdit) {
-            for (var i = 0; i < $scope.loggedInTimes.length; i++) {
+        for (var i = 0; i < $scope.loggedInTimes.length; i++) {
+            if (typeof($scope.loggedInTimes[i].Start) == "string") {
                 var start = $scope.loggedInTimes[i].Start;
                 var stop = $scope.loggedInTimes[i].Stop;
-                finalString += start + '-' + stop + '-' + $scope.loggedInTimes[i].Duration;
-                if (i != ($scope.loggedInTimes.length - 1)) {
-                    finalString += '+';
-                }
-            }
-        } else {
-            for (var i = 0; i < $scope.loggedInTimes.length; i++) {
+            } else {
                 var start = moment($scope.loggedInTimes[i].Start).format("hh:mm");
                 var stop = moment($scope.loggedInTimes[i].Stop).format("hh:mm");
-                finalString += start + '-' + stop + '-' + $scope.loggedInTimes[i].Duration;
-                if (i != ($scope.loggedInTimes.length - 1)) {
-                    finalString += '+';
-                }
+            }
+            finalString += start + '-' + stop + '-' + $scope.loggedInTimes[i].Duration;
+            if (i != ($scope.loggedInTimes.length - 1)) {
+                finalString += '+';
             }
         }
         return finalString;
