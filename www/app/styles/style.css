@@ -76,7 +76,7 @@ ion-item.item {
 
 .button-text-custom {
     color: #1c94c9 !important;
-    padding: 0px 16px !important;
+    padding: 0px 11px !important;
 }
 
 .time-entry-view .card {
@@ -131,7 +131,7 @@ ion-item.item {
     margin: 10px 16px !important;
     width: auto !important;
     padding-top: 5px !important;
-    border-radius: 5px !important;
+    border-radius: 3px !important;
     background: #fff;
 }
 
@@ -150,4 +150,17 @@ ion-item.item {
 
 .no-padding {
     padding: 0px;
+}
+
+.duration-box .item {
+    padding: 13px 6px 13px 13px;
+    border-radius: 3px;
+    background: #f8f8f8;
+    margin: 0;
+}
+
+.duration-box .button {
+    min-height: 30px;
+    font-size: 16px;
+    line-height: 26px;
 }

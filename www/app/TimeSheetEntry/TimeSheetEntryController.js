@@ -70,6 +70,21 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
 
     $scope.timerState = 'stopped';
 
+    //duration-picker
+    $scope.durationPicker = {
+        minutes: 0
+    };
+
+    $scope.durationConfig = {
+        inputButtonType: 'button-custom button-outline button-small',
+        popupTitle: 'Work Duration',
+        popupSubTitle: 'How long did you work?',
+        popupSaveLabel: 'Save',
+        popupSaveButtonType: 'button-outline button-custom',
+        popupCancelLabel: 'Discard',
+        popupCancelButtonType: 'button-outline button-assertive'
+    };
+
     var ipObj1 = {
         callback: function(val) { //Mandatory
             if (typeof(val) === 'undefined') {
@@ -450,4 +465,20 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
     if ($scope.timesheetPreferences.ShowCostCenterInTimeSheet == 'true') {
         $scope.getCostCenter();
     }
+
+    $scope.$watch(function() {
+        return $scope.durationPicker.minutes;
+    }, function(newValue, oldValue) {
+        if (newValue != 0) {
+            var obj = {
+                Start: null,
+                Stop: null,
+                Duration: null
+            };
+            var h = parseInt(newValue / 60);
+            var m = parseInt(newValue % 60);
+            obj.Duration = h + ":" + m;
+            $scope.calculateTotalHours(obj, 'add');
+        }
+    });
 });

@@ -7,7 +7,8 @@ angular.module('officeTimerApp', ['ionic',
     'ionic-toast',
     'ui.rCalendar',
     'ionic-timepicker',
-    'timer'
+    'timer',
+    'ionic-durationpicker'
 ])
 
 .run(function($ionicPlatform, $rootScope, $ionicLoading, ionicToast) {
