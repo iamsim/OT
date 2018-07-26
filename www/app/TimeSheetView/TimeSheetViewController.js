@@ -3,6 +3,7 @@
 angular.module('officeTimerApp').controller('TimeSheetViewController', function($scope, $state, ionicToast, TimeSheetViewFactory, LoginFactory, $ionicPopup, TimeSheetEntryFactory) {
 
     $scope.calendar = {};
+    $scope.calendar.currentDate = TimeSheetViewFactory.currentDate;
     $scope.monthviewDisplayEventTemplateUrl = 'app/TimeSheetView/EventDetailTemplate.html';
     $scope.changeMode = function(mode) {
         $scope.calendar.mode = mode;
@@ -36,12 +37,16 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
         return today.getTime() === currentCalendarDate.getTime();
     };
 
-    $scope.$watch('calendar.currentDate', function(nv, ov) {
-        TimeSheetViewFactory.timeSheetEntryDate = nv;
+    $scope.$watch('calendar.currentDate', function(newTime, oldTime) {
+        TimeSheetViewFactory.timeSheetEntryDate = newTime;
+        $scope.timeSheetSelectedTime = moment(newTime);
+        $scope.getTimeSheetPeriod(moment(newTime).format("YYYY"), moment(newTime).format("MM"), moment(newTime).format("DD"));
+        $scope.getTimeEntries(newTime);
     });
 
     $scope.enterTimeSheet = function() {
         TimeSheetViewFactory.timeSheetEntryDate = $scope.calendar.currentDate;
+        TimeSheetViewFactory.currentDate = $scope.calendar.currentDate;
         $state.go('timeSheetEntry');
     };
 
@@ -136,6 +141,7 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
 
     $scope.entrySelected = function(te) {
         TimeSheetViewFactory.selectedTimeEntry = te;
+        TimeSheetViewFactory.currentDate = $scope.calendar.currentDate;
         $state.go('timeSheetEntry');
     };
 
@@ -184,12 +190,6 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
                 ionicToast.show(error, 'bottom', false, 2500);
             });
     };
-
-    $scope.$watch('calendar.currentDate', function(newTime, oldTime) {
-        $scope.timeSheetSelectedTime = moment(newTime);
-        $scope.getTimeSheetPeriod(moment(newTime).format("YYYY"), moment(newTime).format("MM"), moment(newTime).format("DD"));
-        $scope.getTimeEntries(newTime);
-    });
 
     $scope.getTimeSheetPeriod($scope.timeSheetSelectedTime.format("YYYY"), $scope.timeSheetSelectedTime.format("MM"), $scope.timeSheetSelectedTime.format("DD"));
     $scope.getTimeEntries($scope.calendar.currentDate);

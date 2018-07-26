@@ -4,7 +4,8 @@ angular.module('officeTimerApp').factory("TimeSheetViewFactory", function($q, $h
     var factory = {
         timeSheetEntryDate: null,
         selectedTimeEntry: null,
-        timesheetPreferences: null
+        timesheetPreferences: null,
+        currentDate: new Date()
     };
 
     var URL = LoginFactory.getBaseUrl();
