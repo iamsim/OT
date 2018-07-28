@@ -472,6 +472,10 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
             var h = parseInt(newValue / 60);
             var m = parseInt(newValue % 60);
             obj.Duration = h + ":" + m;
+            //clear existing timelog
+            $scope.loggedInTimes = [];
+            $scope.selected.totalHours = "0:0";
+            //add picked duration
             $scope.calculateTotalHours(obj, 'add');
         }
     });
