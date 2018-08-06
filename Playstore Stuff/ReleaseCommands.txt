@@ -1,0 +1,21 @@
+----------------Office Timer app---------------------
+
+keytool -genkey -v -keystore ot-release-key.keystore -alias mykey -keyalg RSA -keysize 2048 -validity 100000
+
+cordova build --release android
+
+open cmd as administrator and enter the commands in jdk\bin folder
+
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ot-release-key.keystore app-release-unsigned.apk mykey
+
+jarsigner -verify -verbose -certs app-release-unsigned.apk
+
+zipalign -v 4 app-release-unsigned.apk OfficeTimer.apk
+
+--------credentials--------------
+
+keystore: ot-release-key.keystore
+password: test12345
+
+alias: mykey
+password: office
