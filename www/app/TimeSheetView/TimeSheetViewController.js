@@ -149,31 +149,46 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
         if ($scope.timeEntries.length == 0) {
             ionicToast.show('Cannot submit an empty Timesheet. Add some time entries before submitting!', 'bottom', false, 2500);
         } else {
-            var confirmPopup = $ionicPopup.confirm({
-                title: 'Submit Times',
-                template: 'Are you sure you want to submit?'
-            });
-            confirmPopup.then(function(res) {
-                if (res) {
-                    var obj = {
-                        AccountEmployeeTimeEntryPeriodId: $scope.timesheetPeriod.TimesheetPeriodId
-                    }
-                    TimeSheetViewFactory.submitTimeSheet(obj)
-                        .then(function(success) {
-                            if (success.status == 500) {
-                                $scope.errorMessage = success.data;
-                            } else {
-                                $scope.errorMessage = null;
-                                ionicToast.show('Timesheet submitted successfully', 'bottom', false, 2500);
-                                $scope.getTimeSheetPeriod($scope.timeSheetSelectedTime.format("YYYY"), $scope.timeSheetSelectedTime.format("MM"), $scope.timeSheetSelectedTime.format("DD"));
-                            }
-                        }, function(error) {
-                            ionicToast.show(error, 'bottom', false, 2500);
-                        });
+            var hoursPerWeek = 0;
+            for (var i = 0; i < $scope.timesheetWorkingDaysWithHours.length; i++) {
+                var hours = parseInt($scope.timesheetWorkingDaysWithHours[i].TotalHours.split(":")[0]);
+                if (hours < parseInt($scope.timesheetPreferences.MinimumHoursPerDay) || hours > parseInt($scope.timesheetPreferences.MaximumHoursPerDay)) {
+                    var message = 'Daily working hours cannot be less than ' + $scope.timesheetPreferences.MinimumHoursPerDay + ' hours or more than ' + $scope.timesheetPreferences.MaximumHoursPerDay + ' hours';
+                    ionicToast.show(message, 'bottom', false, 2500);
                 } else {
-                    console.log('You are not sure');
+                    hoursPerWeek += hours;
                 }
-            });
+            }
+            if (hoursPerWeek < parseInt($scope.timesheetPreferences.MinimumHoursPerWeek) || hoursPerWeek > parseInt($scope.timesheetPreferences.MaximumHoursPerWeek)) {
+                var message = 'Weekly working hours cannot be less than ' + $scope.timesheetPreferences.MinimumHoursPerWeek + ' hours or more than ' + $scope.timesheetPreferences.MaximumHoursPerWeek + ' hours';
+                ionicToast.show(message, 'bottom', false, 2500);
+            } else {
+                var confirmPopup = $ionicPopup.confirm({
+                    title: 'Submit Times',
+                    template: 'Are you sure you want to submit?'
+                });
+                confirmPopup.then(function(res) {
+                    if (res) {
+                        var obj = {
+                            AccountEmployeeTimeEntryPeriodId: $scope.timesheetPeriod.TimesheetPeriodId
+                        }
+                        TimeSheetViewFactory.submitTimeSheet(obj)
+                            .then(function(success) {
+                                if (success.status == 500) {
+                                    $scope.errorMessage = success.data;
+                                } else {
+                                    $scope.errorMessage = null;
+                                    ionicToast.show('Timesheet submitted successfully', 'bottom', false, 2500);
+                                    $scope.getTimeSheetPeriod($scope.timeSheetSelectedTime.format("YYYY"), $scope.timeSheetSelectedTime.format("MM"), $scope.timeSheetSelectedTime.format("DD"));
+                                }
+                            }, function(error) {
+                                ionicToast.show(error, 'bottom', false, 2500);
+                            });
+                    } else {
+                        console.log('You are not sure');
+                    }
+                });
+            }
         }
     };
 

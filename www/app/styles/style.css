@@ -164,3 +164,7 @@ ion-item.item {
     font-size: 16px;
     line-height: 26px;
 }
+
+.login-list {
+    margin-bottom: 0px;
+}
