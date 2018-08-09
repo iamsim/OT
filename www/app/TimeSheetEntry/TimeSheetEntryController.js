@@ -209,6 +209,8 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
             ionicToast.show("Please select a task", 'bottom', false, 2500);
         } else if ($scope.timesheetPreferences.ShowWorkTypeInTimeSheet == 'true' && $scope.selected.workTypeId == null) {
             ionicToast.show("Please select a work type", 'bottom', false, 2500);
+        } else if ($scope.selected.totalHours == "0:0" || $scope.selected.totalHours == "00:00") {
+            ionicToast.show("Please enter your working hours", 'bottom', false, 2500);
         } else {
             var obj = {
                 YearWS: moment($scope.selected.date).format("YYYY"),
@@ -471,12 +473,17 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
             };
             var h = parseInt(newValue / 60);
             var m = parseInt(newValue % 60);
-            obj.Duration = h + ":" + m;
-            //clear existing timelog
-            $scope.loggedInTimes = [];
-            $scope.selected.totalHours = "0:0";
-            //add picked duration
-            $scope.calculateTotalHours(obj, 'add');
+            if (h > 24 || m > 60) {
+                ionicToast.show('Hours cannot be more than 24. Minutes cannot be more than 60.', 'bottom', false, 2500);
+                $scope.durationPicker.minutes = oldValue;
+            } else {
+                obj.Duration = h + ":" + m;
+                //clear existing timelog
+                $scope.loggedInTimes = [];
+                $scope.selected.totalHours = "0:0";
+                //add picked duration
+                $scope.calculateTotalHours(obj, 'add');
+            }
         }
     });
 });
