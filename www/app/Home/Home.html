@@ -1,0 +1,49 @@
+<ion-view title="Home" class="home-view">
+    <ion-nav-bar class="bar-custom">
+        <ion-nav-buttons side="right">
+            <button class="button button-icon ion-power" ng-click="logout()"></button>
+        </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-content class="has-header">
+        <div class="row home-row">
+            <div class="col text-center" ng-click="others()" ng-click>
+                <img src="app/images/inbox.svg" class="home-image" alt="browser does not support images">
+                <div>Inbox</div>
+            </div>
+            <div class="col text-center" ng-click="others()">
+                <img src="app/images/team.svg" class="home-image" alt="browser does not support images">
+                <div>Team</div>
+            </div>
+        </div>
+        <div class="row home-row">
+            <div class="col text-center" ng-click="others()">
+                <img src="app/images/orgchart.svg" class="home-image" alt="browser does not support images">
+                <div>Org Chart</div>
+            </div>
+            <div class="col text-center" ng-click="others()">
+                <img src="app/images/timeoff.svg" class="home-image" alt="browser does not support images">
+                <div>Time Off</div>
+            </div>
+        </div>
+        <div class="row home-row">
+            <div class="col text-center" ng-click="timeTracking()">
+                <img src="app/images/timetracking.svg" class="home-image" alt="browser does not support images">
+                <div>Time Tracking</div>
+            </div>
+            <div class="col text-center" ng-click="others()">
+                <img src="app/images/staffing.svg" class="home-image" alt="browser does not support images">
+                <div>Staffing</div>
+            </div>
+        </div>
+        <div class="row home-row">
+            <div class="col text-center" ng-click="others()">
+                <img src="app/images/dashboards.svg" class="home-image" alt="browser does not support images">
+                <div>Dashboard</div>
+            </div>
+            <div class="col text-center" ng-click="others()">
+                <img src="app/images/downloads.svg" class="home-image" alt="browser does not support images">
+                <div>Downloads</div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

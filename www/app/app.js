@@ -89,6 +89,12 @@ angular.module('officeTimerApp', ['ionic',
             templateUrl: 'app/Login/Login.html',
             controller: 'LoginController'
         })
+        .state('home', {
+            url: '/home',
+            cache: false,
+            templateUrl: 'app/Home/Home.html',
+            controller: 'HomeController'
+        })
         .state('timeSheetView', {
             url: '/timeSheetView',
             cache: false,

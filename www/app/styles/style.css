@@ -168,3 +168,17 @@ ion-item.item {
 .login-list {
     margin-bottom: 0px;
 }
+
+.home-row {
+    height: 25%;
+}
+
+.home-view {
+    background: #50aaef;
+    color: #fff;
+}
+
+.home-image {
+    width: 60px;
+    margin-top: 15%;
+}

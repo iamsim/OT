@@ -3,9 +3,9 @@
 angular.module('officeTimerApp').controller('LoginController', function($scope, $state, LoginFactory, ionicToast) {
 
     $scope.loginData = {
-        base_url: "https://prod.officetimer.com",
-        username: "",
-        password: ""
+        base_url: "https://next.officetimer.com",
+        username: "kalyan713@co.com123",
+        password: "welcome1#"
     };
 
     $scope.errorMessage = null;
@@ -22,7 +22,6 @@ angular.module('officeTimerApp').controller('LoginController', function($scope, 
                         $scope.errorMessage = null;
                         LoginFactory.loginData = $scope.loginData;
                         $scope.getAccountId();
-                        // $state.go('timeSheetView');
                     }
                 }, function(error) {
                     ionicToast.show(error, 'bottom', false, 2500);
@@ -51,7 +50,7 @@ angular.module('officeTimerApp').controller('LoginController', function($scope, 
                     $scope.errorMessage = success.data;
                 } else {
                     $scope.errorMessage = null;
-                    $state.go('timeSheetView');
+                    $state.go('home');
                 }
             }, function(error) {
                 ionicToast.show(error, 'bottom', false, 2500);

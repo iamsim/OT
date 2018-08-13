@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('officeTimerApp').controller('TimeSheetViewController', function($scope, $state, ionicToast, TimeSheetViewFactory, LoginFactory, $ionicPopup, TimeSheetEntryFactory) {
+angular.module('officeTimerApp').controller('TimeSheetViewController', function($scope, $state, ionicToast, TimeSheetViewFactory, LoginFactory, $ionicPopup, TimeSheetEntryFactory, $ionicViewSwitcher) {
 
     $scope.calendar = {};
     $scope.calendar.currentDate = TimeSheetViewFactory.currentDate;
@@ -204,6 +204,11 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
             }, function(error) {
                 ionicToast.show(error, 'bottom', false, 2500);
             });
+    };
+
+    $scope.goBack = function() {
+        $ionicViewSwitcher.nextDirection('back');
+        $state.go('home');
     };
 
     $scope.getTimeSheetPeriod($scope.timeSheetSelectedTime.format("YYYY"), $scope.timeSheetSelectedTime.format("MM"), $scope.timeSheetSelectedTime.format("DD"));

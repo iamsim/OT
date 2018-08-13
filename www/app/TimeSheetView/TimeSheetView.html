@@ -1,10 +1,10 @@
-<ion-view name="time-sheet-view" class="time-sheet-view">
-    <ion-header-bar class="bar-custom">
-        <h2 class="title">{{viewTitle}}</h2>
-        <div class="buttons secondary">
+<ion-view name="time-sheet-view" class="time-sheet-view" title="{{viewTitle}}">
+    <ion-nav-bar class="bar-custom">
+        <ion-nav-back-button></ion-nav-back-button>
+        <ion-nav-buttons side="right">
             <button class="button button-icon ion-plus-round" ng-click="enterTimeSheet()" ng-if="timesheetPeriod.DisableTimeEntry == 'false'"></button>
-        </div>
-    </ion-header-bar>
+        </ion-nav-buttons>
+    </ion-nav-bar>
 
     <div class="bar bar-subheader bar-default">
         <div class="subheader-text text-center">{{currentWeek}} <span ng-class="{'submitted': timesheetPeriod.TimesheetStatus == 'Submitted', 'approved': timesheetPeriod.TimesheetStatus == 'Approved', 'rejected': timesheetPeriod.TimesheetStatus == 'Rejected', 'not-submitted': timesheetPeriod.TimesheetStatus == 'Not Submitted'}">({{timesheetPeriod.TimesheetStatus}})</span></div>
