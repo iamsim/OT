@@ -173,12 +173,16 @@ ion-item.item {
     height: 25%;
 }
 
-.home-view {
-    background: #50aaef;
-    color: #fff;
+.home-disabled {
+    background: #e0e0e0;
+    opacity: 0.5;
+    margin: 5px;
 }
 
 .home-image {
-    width: 60px;
-    margin-top: 15%;
+    width: 50px;
+}
+
+.home-label {
+    font-size: 13px;
 }

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('officeTimerApp').controller('HomeController', function($scope, $state, ionicToast) {
+angular.module('officeTimerApp').controller('HomeController', function($scope, $state, ionicToast, $ionicHistory) {
 
     $scope.timeTracking = function() {
         $state.go('timeSheetView');
@@ -9,5 +9,12 @@ angular.module('officeTimerApp').controller('HomeController', function($scope, $
     $scope.others = function() {
         ionicToast.show('This feature will be out in the next release', 'bottom', false, 2500);
     };
+
+    $scope.logout = function() {
+        $ionicHistory.nextViewOptions({
+            disableBack: true
+        });
+        $state.go('login');
+    }
 
 });

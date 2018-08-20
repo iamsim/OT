@@ -5,44 +5,52 @@
         </ion-nav-buttons>
     </ion-nav-bar>
     <ion-content class="has-header">
-        <div class="row home-row">
-            <div class="col text-center" ng-click="others()" ng-click>
-                <img src="app/images/inbox.svg" class="home-image" alt="browser does not support images">
-                <div>Inbox</div>
+        <div class="card">
+            <div class="item item-divider">
+                My Stuff
             </div>
-            <div class="col text-center" ng-click="others()">
-                <img src="app/images/team.svg" class="home-image" alt="browser does not support images">
-                <div>Team</div>
+            <div class="row no-padding">
+                <div class="col text-center" ng-click="timeTracking()" style="margin:5px;">
+                    <img src="app/images/TimesheetApproval.png" class="home-image" alt="browser does not support images">
+                    <div class="custom home-label">My Timesheet</div>
+                </div>
+                <div class="col text-center home-disabled" ng-click="others()">
+                    <img src="app/images/MyProjects.png" class="home-image" alt="browser does not support images">
+                    <div class="custom home-label">My Projects</div>
+                </div>
+                <div class="col text-center home-disabled" ng-click="others()">
+                    <img src="app/images/MyTasks.png" class="home-image" alt="browser does not support images">
+                    <div class="custom home-label">My Tasks</div>
+                </div>
+            </div>
+            <div class="row no-padding" style="margin-top:0;">
+                <div class="col text-center home-disabled" ng-click="others()" ng-click>
+                    <img src="app/images/MyTimeoff.png" class="home-image" alt="browser does not support images">
+                    <div class="custom home-label">My Timeoff</div>
+                </div>
+                <div class="col text-center home-disabled" ng-click="others()">
+                    <img src="app/images/MyAttendance.png" class="home-image" alt="browser does not support images">
+                    <div class="custom home-label">My Attendance</div>
+                </div>
             </div>
         </div>
-        <div class="row home-row">
-            <div class="col text-center" ng-click="others()">
-                <img src="app/images/orgchart.svg" class="home-image" alt="browser does not support images">
-                <div>Org Chart</div>
+        <div class="card">
+            <div class="item item-divider">
+                Approvals
             </div>
-            <div class="col text-center" ng-click="others()">
-                <img src="app/images/timeoff.svg" class="home-image" alt="browser does not support images">
-                <div>Time Off</div>
-            </div>
-        </div>
-        <div class="row home-row">
-            <div class="col text-center" ng-click="timeTracking()">
-                <img src="app/images/timetracking.svg" class="home-image" alt="browser does not support images">
-                <div>Time Tracking</div>
-            </div>
-            <div class="col text-center" ng-click="others()">
-                <img src="app/images/staffing.svg" class="home-image" alt="browser does not support images">
-                <div>Staffing</div>
-            </div>
-        </div>
-        <div class="row home-row">
-            <div class="col text-center" ng-click="others()">
-                <img src="app/images/dashboards.svg" class="home-image" alt="browser does not support images">
-                <div>Dashboard</div>
-            </div>
-            <div class="col text-center" ng-click="others()">
-                <img src="app/images/downloads.svg" class="home-image" alt="browser does not support images">
-                <div>Downloads</div>
+            <div class="row home-row">
+                <div class="col text-center home-disabled" ng-click="others()">
+                    <img src="app/images/ExpenseApproval.png" class="home-image" alt="browser does not support images">
+                    <div class="custom home-label">Expense Approval</div>
+                </div>
+                <div class="col text-center home-disabled" ng-click="others()">
+                    <img src="app/images/TimeoffApproval.png" class="home-image" alt="browser does not support images">
+                    <div class="custom home-label">Timeoff Approval</div>
+                </div>
+                <div class="col text-center home-disabled" ng-click="others()">
+                    <img src="app/images/TimesheetApproval.png" class="home-image" alt="browser does not support images">
+                    <div class="custom home-label">Timesheet Approval</div>
+                </div>
             </div>
         </div>
     </ion-content>
