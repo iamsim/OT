@@ -180,9 +180,15 @@ ion-item.item {
 }
 
 .home-image {
-    width: 50px;
+    width: 60px;
+    margin-top: 15%;
 }
 
 .home-label {
     font-size: 13px;
+}
+
+.home-view {
+    background: #e8f5ff;
+    color: #5b6166;
 }
