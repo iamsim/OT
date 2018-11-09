@@ -3,18 +3,18 @@
 angular.module('officeTimerApp').controller('LoginController', function($scope, $state, LoginFactory, ionicToast) {
 
     $scope.loginData = {
-        base_url: "https://next.officetimer.com",
-        username: "demoofficetimer111@gmail.com",
-        password: "welcome1#"
+        base_url: "https://app.officetimer.com",
+        username: "",
+        password: ""
     };
     $scope.enableURL = true;
     $scope.enablePassword = true;
 
     $scope.errorMessage = null;
 
-    // cordova.getAppVersion.getVersionNumber(function(version) {
-    //     $scope.appVersion = version;
-    // });
+    cordova.getAppVersion.getVersionNumber(function(version) {
+        $scope.appVersion = version;
+    });
 
     $scope.login = function() {
         if ($scope.loginData.username == "" || $scope.loginData.password == "") {

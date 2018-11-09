@@ -66,16 +66,21 @@
                 <textarea style="width:100%;padding: 10px;border-radius: 3px;" name="descriptionTextArea" placeholder="Description" rows="2" ng-model="selected.description"></textarea>
             </div>
         </div>
-        <div class="row" style="padding:0px 15px;">
-            <div class="col col-40" style="padding:0px 5px 0px 0px;">
-                <button ng-click="startTimer()" class="button button-stable button-text-custom icon-left ion-android-stopwatch" style="width: 100%;">Timer</button>
+        <div class="row" style="padding: 0px 10px 5px 10px;">
+            <div class="col col-25">
+                <button ng-click="startTimer()" class="button button-stable button-text-custom" style="width: 100%;">
+                    <i class="icon ion-android-stopwatch"></i>&nbsp;Timer  
+                </button>
             </div>
-            <div class="col col-60 no-padding">
-                <ionic-durationpicker class="duration-box" idp-label="Start/End Time" idp-config="durationConfig" idp-output="durationPicker.minutes">
+            <div class="col col-25">
+                <button ng-click="toggleManualEntry()" class="button button-stable button-text-custom" style="width: 100%;">Start/End</button>
+            </div>
+            <div class="col">
+                <ionic-durationpicker class="duration-box" idp-label="Time Spent" idp-config="durationConfig" idp-output="durationPicker.minutes">
                 </ionic-durationpicker>
             </div>
         </div>
-        <div class="row manual-time-entry" style="margin: 10px 0px;">
+        <div class="row manual-time-entry" ng-if="enableManualEntry">
             <div class="col col-80" style="padding: 0">
                 <div class="row" style="padding: 0">
                     <div class="col text-center" style="padding: 0">

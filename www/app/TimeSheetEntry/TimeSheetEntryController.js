@@ -16,6 +16,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
     };
 
     $scope.timesheetPreferences = TimeSheetViewFactory.timesheetPreferences;
+    $scope.enableManualEntry = false;
 
     $scope.newTimesheetEntry = {
         IsBillable: false
@@ -483,6 +484,8 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
                 //clear existing timelog
                 $scope.loggedInTimes = [];
                 $scope.selected.totalHours = "0:0";
+                //disable manual entry
+                $scope.enableManualEntry = false;
                 //add picked duration
                 $scope.calculateTotalHours(obj, 'add');
             }
@@ -509,6 +512,13 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
             });
         } else {
             $ionicHistory.goBack();
+        }
+    };
+
+    $scope.toggleManualEntry = function() {
+        $scope.enableManualEntry = !$scope.enableManualEntry;
+        if ($scope.enableManualEntry == true) {
+            ionicToast.show('Please select your Start and End Eime and then tap on Add', 'bottom', false, 2500);
         }
     };
 });
