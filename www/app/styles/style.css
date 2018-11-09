@@ -192,3 +192,9 @@ ion-item.item {
     background: #e8f5ff;
     color: #5b6166;
 }
+
+.textbox-inset-button {
+    position: absolute;
+    top: 35px;
+    right: 10px;
+}

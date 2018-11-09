@@ -117,6 +117,8 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
                     $scope.timeEntries = success.data.results;
                     if ($scope.timeEntries.length > 0) {
                         $scope.getTotalHours(obj);
+                    } else {
+                        ionicToast.show('No entries for this particular date', 'bottom', false, 2500);
                     }
                 }
             }, function(error) {

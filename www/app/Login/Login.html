@@ -10,18 +10,25 @@
                         </div>
                     </div>
                     <div class="list login-list">
-                        <label class="item item-input item-floating-label">
+                        <div class="item item-input item-floating-label">
                             <span class="input-label custom">URL</span>
-                            <input type="text" placeholder="URL" ng-model="loginData.base_url">
-                        </label>
-                        <label class="item item-input item-floating-label">
+                            <input type="text" placeholder="URL" ng-model="loginData.base_url" ng-disabled="enableURL">
+                            <button class="button button-small button-clear button-custom pull-right textbox-inset-button" ng-click="toggleURL()">
+                                <i class="icon ion-edit"></i>
+                            </button>
+                        </div>
+                        <div class="item item-input item-floating-label">
                             <span class="input-label custom">Username</span>
                             <input type="text" placeholder="Username" ng-model="loginData.username">
-                        </label>
-                        <label class="item item-input item-floating-label">
+                        </div>
+                        <div class="item item-input item-floating-label">
                             <span class="input-label custom">Password</span>
-                            <input type="password" placeholder="Password" ng-model="loginData.password">
-                        </label>
+                            <input type="password" placeholder="Password" ng-model="loginData.password" ng-show="enablePassword">
+                            <input type="text" placeholder="Password" ng-model="loginData.password" ng-show="!enablePassword">
+                            <button class="button button-small button-clear button-custom pull-right textbox-inset-button" ng-click="togglePassword()">
+                                <i class="icon ion-eye"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="row" ng-if="errorMessage">
                         <div class="col assertive text-center">
@@ -30,6 +37,11 @@
                     </div>
                     <div class="padding">
                         <button class="button button-custom" ng-click="login()" style="width: 100%;">Login</button>
+                    </div>
+                    <div class="row">
+                        <div class="col text-center text-muted">
+                            v{{appVersion}}
+                        </div>
                     </div>
                 </div>
             </div>

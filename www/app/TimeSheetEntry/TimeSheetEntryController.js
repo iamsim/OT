@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('officeTimerApp').controller('TimeSheetEntryController', function($scope, $state, $ionicPopup, $timeout, ionicTimePicker, ionicToast, TimeSheetEntryFactory, TimeSheetViewFactory) {
+angular.module('officeTimerApp').controller('TimeSheetEntryController', function($scope, $state, $ionicPopup, $timeout, ionicTimePicker, ionicToast, TimeSheetEntryFactory, TimeSheetViewFactory, $ionicHistory) {
 
     $scope.selected = {
         clientId: null,
@@ -138,11 +138,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
     };
 
     $scope.pickEndTime = function() {
-        if ($scope.timepicked.StartHours == 0) {
-            ionicToast.show("Please select start time first", 'bottom', false, 2500);
-        } else {
-            ionicTimePicker.openTimePicker(ipObj2);
-        }
+        ionicTimePicker.openTimePicker(ipObj2);
     };
 
     $scope.startTimer = function() {
@@ -486,4 +482,27 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
             }
         }
     });
+
+    $scope.customBack = function(event) {
+        if ($scope.selected.clientId != null ||
+            $scope.selected.projectId != null ||
+            $scope.selected.taskId != null ||
+            $scope.selected.totalHours != "0:0") {
+            var confirmPopup = $ionicPopup.confirm({
+                title: 'Attention',
+                template: 'You have unsaved data in this entry. If you choose to go back, your changes will be discarded. Are you sure you want to go back?'
+            });
+
+            confirmPopup.then(function(res) {
+                if (res) {
+                    console.log('You are sure');
+                    $ionicHistory.goBack();
+                } else {
+                    console.log('You are not sure');
+                }
+            });
+        } else {
+            $ionicHistory.goBack();
+        }
+    };
 });

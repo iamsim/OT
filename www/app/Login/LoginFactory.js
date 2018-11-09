@@ -31,6 +31,7 @@ angular.module('officeTimerApp').factory("LoginFactory", function($q, $http) {
             }
         }).then(function(success) {
             factory.AuthenticateMobileUserResult = success.data.AuthenticateMobileUserResult;
+            factory.storeLoginSession(obj);
             d.resolve(success);
         }, function(error) {
             factory.isAuthenticated = false;
@@ -93,9 +94,9 @@ angular.module('officeTimerApp').factory("LoginFactory", function($q, $http) {
 
     factory.removeLoginSession = function() {
         factory.isLoggedIn = false;
-        localStorage.setItem("username", loginData.username);
-        localStorage.setItem("password", loginData.password);
-        localStorage.setItem("base_url", loginData.base_url);
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
+        localStorage.removeItem("base_url");
         localStorage.removeItem("isLoggedIn");
     };
 

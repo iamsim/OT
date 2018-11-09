@@ -39,6 +39,21 @@ angular.module('officeTimerApp', ['ionic',
             });
         });
 
+        $ionicPlatform.registerBackButtonAction(function(e) {
+            if ($state.is('home')) {
+                if (confirm('Are you sure you want to Exit?')) {
+                    ionic.Platform.exitApp();
+                    return false;
+                } else {
+                    e.preventDefault();
+                    return false;
+                }
+            } else if ($state.is('timeSheetEntry')) {
+                e.preventDefault();
+                $rootScope.$broadcast('show-save-dialog');
+            }
+        }, 100);
+
         // if (!$cordovaNetwork.isOnline()) {
         //     ionicToast.show('There is no network connection..', 'bottom', false, 2500);
         // }

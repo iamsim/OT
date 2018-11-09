@@ -1,6 +1,6 @@
 <ion-view title="Time Sheet Entry ({{selected.date | date: 'dd/MM'}})" class="time-entry-view">
     <ion-nav-bar class="bar-custom">
-        <ion-nav-back-button></ion-nav-back-button>
+        <ion-nav-back-button ng-click="customBack()"></ion-nav-back-button>
     </ion-nav-bar>
     <ion-content class="has-heade">
         <div class="card" style="margin-bottom: 0px;box-shadow: 0 0 0; border-radius: 3px;">
@@ -60,22 +60,22 @@
         </div>
         <div class="row no-padding" style="margin: 15px !important;width: auto;">
             <div class="col no-padding">
-                <textarea style="width:100%;padding: 10px;border-radius: 3px;" name="descriptionTextArea" placeholder="Description" rows="4" ng-model="selected.description"></textarea>
+                <textarea style="width:100%;padding: 10px;border-radius: 3px;" name="descriptionTextArea" placeholder="Description" rows="2" ng-model="selected.description"></textarea>
             </div>
         </div>
         <div class="row" style="padding:0px 15px; margin-bottom: 15px;">
             <div class="col text-center no-padding">
                 <div class="total-hours custom">
-                    Total Hours: {{selected.totalHours}}
+                    Time Spent: {{selected.totalHours}}
                 </div>
             </div>
         </div>
         <div class="row" style="padding:0px 15px;">
             <div class="col col-40" style="padding:0px 5px 0px 0px;">
-                <button ng-click="startTimer()" class="button button-stable button-text-custom icon-left ion-android-stopwatch" style="width: 100%;">Start Timer</button>
+                <button ng-click="startTimer()" class="button button-stable button-text-custom icon-left ion-android-stopwatch" style="width: 100%;">Timer</button>
             </div>
             <div class="col col-60 no-padding">
-                <ionic-durationpicker class="duration-box" idp-label="Pick Duration" idp-config="durationConfig" idp-output="durationPicker.minutes">
+                <ionic-durationpicker class="duration-box" idp-label="Start/End Time" idp-config="durationConfig" idp-output="durationPicker.minutes">
                 </ionic-durationpicker>
             </div>
         </div>
@@ -86,7 +86,7 @@
                         <b class="custom">Start</b>
                     </div>
                     <div class="col text-center" style="padding: 0">
-                        <b class="custom">Stop</b>
+                        <b class="custom">End</b>
                     </div>
                     <div class="col text-center" style="padding: 0">
                         <b class="custom">Duration</b>
@@ -117,7 +117,7 @@
                     <b class="custom">Start</b>
                 </div>
                 <div class="col text-center">
-                    <b class="custom">Stop</b>
+                    <b class="custom">End</b>
                 </div>
                 <div class="col text-center">
                     <b class="custom">Duration</b>

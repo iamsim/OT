@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('officeTimerApp').controller('HomeController', function($scope, $state, ionicToast, $ionicHistory) {
+angular.module('officeTimerApp').controller('HomeController', function($scope, $state, ionicToast, $ionicHistory, LoginFactory) {
 
     $scope.timeTracking = function() {
         $state.go('timeSheetView');
@@ -14,6 +14,7 @@ angular.module('officeTimerApp').controller('HomeController', function($scope, $
         $ionicHistory.nextViewOptions({
             disableBack: true
         });
+        LoginFactory.logout();
         $state.go('login');
     }
 
