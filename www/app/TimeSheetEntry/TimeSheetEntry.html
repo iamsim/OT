@@ -1,6 +1,9 @@
-<ion-view title="Time Sheet Entry ({{selected.date | date: 'dd/MM'}})" class="time-entry-view">
+<ion-view title="{{selected.date | date: 'dd/MMM'}}" class="time-entry-view">
     <ion-nav-bar class="bar-custom">
         <ion-nav-back-button ng-click="customBack()"></ion-nav-back-button>
+        <ion-nav-buttons side="secondary">
+            <h3 style="font-size: 19px;line-height: 32px;color: white;margin-right: 10px;">{{selected.totalHours}}</h3>
+        </ion-nav-buttons>
     </ion-nav-bar>
     <ion-content class="has-heade">
         <div class="card" style="margin-bottom: 0px;box-shadow: 0 0 0; border-radius: 3px;">
@@ -61,13 +64,6 @@
         <div class="row no-padding" style="margin: 15px !important;width: auto;">
             <div class="col no-padding">
                 <textarea style="width:100%;padding: 10px;border-radius: 3px;" name="descriptionTextArea" placeholder="Description" rows="2" ng-model="selected.description"></textarea>
-            </div>
-        </div>
-        <div class="row" style="padding:0px 15px; margin-bottom: 15px;">
-            <div class="col text-center no-padding">
-                <div class="total-hours custom">
-                    Time Spent: {{selected.totalHours}}
-                </div>
             </div>
         </div>
         <div class="row" style="padding:0px 15px;">

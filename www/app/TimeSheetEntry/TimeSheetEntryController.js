@@ -85,39 +85,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         popupCancelButtonType: 'button-outline button-assertive'
     };
 
-    var ipObj1 = {
-        callback: function(val) { //Mandatory
-            if (typeof(val) === 'undefined') {
-                console.log('Time not selected');
-            } else {
-                var selectedTime = new Date(val * 1000);
-                $scope.timepicked.Start.setHours(selectedTime.getUTCHours());
-                $scope.timepicked.Start.setMinutes(selectedTime.getUTCMinutes());
-            }
-        },
-        format: 24, //Optional
-        step: 1,
-        setLabel: 'Set' //Optional
-    };
-
-    var ipObj2 = {
-        callback: function(val) { //Mandatory
-            if (typeof(val) === 'undefined') {
-                console.log('Time not selected');
-            } else {
-                var selectedTime = new Date(val * 1000);
-                $scope.timepicked.Stop.setHours(selectedTime.getUTCHours());
-                $scope.timepicked.Stop.setMinutes(selectedTime.getUTCMinutes());
-                var start = moment($scope.timepicked.Start);
-                var end = moment($scope.timepicked.Stop);
-                var duration = moment.duration(end.diff(start));
-                $scope.timepicked.Duration = parseInt(duration.asHours()) + ":" + (parseInt(duration.asMinutes()) % 60);
-            }
-        },
-        format: 24, //Optional
-        step: 1,
-        setLabel: 'Set' //Optional
-    };
+    var ipObj1, ipObj2;
 
     function fillTimeLog(timeLogString) {
         var returnArray = [];
@@ -134,10 +102,44 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
     }
 
     $scope.pickStartTime = function() {
+        ipObj1 = {
+            inputTime: ((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60),
+            callback: function(val) { //Mandatory
+                if (typeof(val) === 'undefined') {
+                    console.log('Time not selected');
+                } else {
+                    var selectedTime = new Date(val * 1000);
+                    $scope.timepicked.Start.setHours(selectedTime.getUTCHours());
+                    $scope.timepicked.Start.setMinutes(selectedTime.getUTCMinutes());
+                }
+            },
+            format: 24, //Optional
+            step: 1,
+            setLabel: 'Set' //Optional
+        };
         ionicTimePicker.openTimePicker(ipObj1);
     };
 
     $scope.pickEndTime = function() {
+        ipObj2 = {
+            inputTime: ((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60),
+            callback: function(val) { //Mandatory
+                if (typeof(val) === 'undefined') {
+                    console.log('Time not selected');
+                } else {
+                    var selectedTime = new Date(val * 1000);
+                    $scope.timepicked.Stop.setHours(selectedTime.getUTCHours());
+                    $scope.timepicked.Stop.setMinutes(selectedTime.getUTCMinutes());
+                    var start = moment($scope.timepicked.Start);
+                    var end = moment($scope.timepicked.Stop);
+                    var duration = moment.duration(end.diff(start));
+                    $scope.timepicked.Duration = parseInt(duration.asHours()) + ":" + (parseInt(duration.asMinutes()) % 60);
+                }
+            },
+            format: 24, //Optional
+            step: 1,
+            setLabel: 'Set' //Optional
+        };
         ionicTimePicker.openTimePicker(ipObj2);
     };
 
@@ -156,6 +158,10 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         });
 
         $timeout(function() {
+            if ($scope.selected.totalHours != "0:0") {
+                $scope.selected.totalHours = "0:0";
+                $scope.durationPicker.minutes = 0;
+            }
             $scope.timerState = 'running';
             $scope.$broadcast('timer-start');
             $scope.currentRunningTime.Start = new Date();
