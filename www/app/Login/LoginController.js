@@ -11,10 +11,7 @@ angular.module('officeTimerApp').controller('LoginController', function($scope, 
     $scope.enablePassword = true;
 
     $scope.errorMessage = null;
-
-    cordova.getAppVersion.getVersionNumber(function(version) {
-        $scope.appVersion = version;
-    });
+    $scope.appVersion = null;
 
     $scope.login = function() {
         if ($scope.loginData.username == "" || $scope.loginData.password == "") {
@@ -77,5 +74,10 @@ angular.module('officeTimerApp').controller('LoginController', function($scope, 
     $scope.togglePassword = function() {
         $scope.enablePassword = !$scope.enablePassword;
     };
+
+    $scope.$on('app-version', function(event, obj) {
+        $scope.appVersion = obj.appVersion;
+        $scope.$apply();
+    });
 
 });

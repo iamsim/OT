@@ -54,9 +54,9 @@ angular.module('officeTimerApp', ['ionic',
             }
         }, 100);
 
-        // if (!$cordovaNetwork.isOnline()) {
-        //     ionicToast.show('There is no network connection..', 'bottom', false, 2500);
-        // }
+        cordova.getAppVersion(function(version) {
+            $rootScope.$broadcast('app-version', { appVersion: version });
+        });
     });
 
     $rootScope.$on('loading:show', function() {
