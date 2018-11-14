@@ -54,9 +54,9 @@ angular.module('officeTimerApp', ['ionic',
             }
         }, 100);
 
-        // cordova.getAppVersion(function(version) {
-        //     $rootScope.$broadcast('app-version', { appVersion: version });
-        // });
+        cordova.getAppVersion(function(version) {
+            $rootScope.$broadcast('app-version', { appVersion: version });
+        });
     });
 
     $rootScope.$on('loading:show', function() {
