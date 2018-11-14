@@ -134,7 +134,12 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
                     var start = moment($scope.timepicked.Start);
                     var end = moment($scope.timepicked.Stop);
                     var duration = moment.duration(end.diff(start));
-                    $scope.timepicked.Duration = parseInt(duration.asHours()) + ":" + (parseInt(duration.asMinutes()) % 60);
+                    if (parseInt(duration.asHours()) < 0 || (parseInt(duration.asMinutes()) % 60) < 0) {
+                        ionicToast.show("Duration cannot be in negative value", 'bottom', false, 3500);
+                        $scope.timepicked.Duration = "0:0";
+                    } else {
+                        $scope.timepicked.Duration = parseInt(duration.asHours()) + ":" + (parseInt(duration.asMinutes()) % 60);
+                    }
                 }
             },
             format: 24, //Optional
@@ -207,13 +212,13 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
 
     $scope.saveTimeSheet = function() {
         if ($scope.selected.projectId == null) {
-            ionicToast.show("Please select a project", 'bottom', false, 2500);
+            ionicToast.show("Please select a project", 'bottom', false, 3500);
         } else if ($scope.selected.taskId == null) {
-            ionicToast.show("Please select a task", 'bottom', false, 2500);
+            ionicToast.show("Please select a task", 'bottom', false, 3500);
         } else if ($scope.timesheetPreferences.ShowWorkTypeInTimeSheet == 'true' && $scope.selected.workTypeId == null) {
-            ionicToast.show("Please select a work type", 'bottom', false, 2500);
+            ionicToast.show("Please select a work type", 'bottom', false, 3500);
         } else if ($scope.selected.totalHours == "0:0" || $scope.selected.totalHours == "00:00") {
-            ionicToast.show("Please enter your working hours", 'bottom', false, 2500);
+            ionicToast.show("Please enter your working hours", 'bottom', false, 3500);
         } else {
             var obj = {
                 YearWS: moment($scope.selected.date).format("YYYY"),
@@ -233,25 +238,25 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
                 TimeSheetEntryFactory.updateTimeEntry(obj)
                     .then(function(success) {
                         if (success.status == 500) {
-                            ionicToast.show(success.data, 'bottom', false, 2500)
+                            ionicToast.show(success.data, 'bottom', false, 3500)
                         } else {
-                            ionicToast.show('Time entry updated successfully!', 'bottom', false, 2500);
+                            ionicToast.show('Time entry updated successfully!', 'bottom', false, 3500);
                             history.back();
                         }
                     }, function(error) {
-                        ionicToast.show(error, 'bottom', false, 2500);
+                        ionicToast.show(error, 'bottom', false, 3500);
                     });
             } else {
                 TimeSheetEntryFactory.addTimeEntry(obj)
                     .then(function(success) {
                         if (success.status == 500) {
-                            ionicToast.show(success.data, 'bottom', false, 2500)
+                            ionicToast.show(success.data, 'bottom', false, 3500)
                         } else {
-                            ionicToast.show('Time entry added successfully!', 'bottom', false, 2500);
+                            ionicToast.show('Time entry added successfully!', 'bottom', false, 3500);
                             history.back();
                         }
                     }, function(error) {
-                        ionicToast.show(error, 'bottom', false, 2500);
+                        ionicToast.show(error, 'bottom', false, 3500);
                     });
             }
         }
@@ -259,7 +264,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
 
     $scope.addLoggedTime = function() {
         if ($scope.timepicked.Duration.indexOf('-') != -1) {
-            ionicToast.show("Duration cannot be in negative value", 'bottom', false, 2500);
+            ionicToast.show("Duration cannot be in negative value", 'bottom', false, 3500);
         } else if ($scope.timepicked.Duration != "0:0") {
             var obj = angular.copy($scope.timepicked);
             $scope.loggedInTimes.push(obj);
@@ -270,7 +275,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
                 Duration: "0:0"
             };
         } else {
-            ionicToast.show("Please choose different times", 'bottom', false, 2500);
+            ionicToast.show("Please choose different times", 'bottom', false, 3500);
         }
     };
 
@@ -298,12 +303,12 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         TimeSheetEntryFactory.getAssignedClients()
             .then(function(success) {
                 if (success.status == 500) {
-                    ionicToast.show(success.data, 'bottom', false, 2500)
+                    ionicToast.show(success.data, 'bottom', false, 3500)
                 } else {
                     $scope.clients = success.data.results;
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', false, 2500);
+                ionicToast.show(error, 'bottom', false, 3500);
             });
     };
 
@@ -316,12 +321,12 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         TimeSheetEntryFactory.getAssignedProjects()
             .then(function(success) {
                 if (success.status == 500) {
-                    ionicToast.show(success.data, 'bottom', false, 2500)
+                    ionicToast.show(success.data, 'bottom', false, 3500)
                 } else {
                     $scope.projects = success.data.results;
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', false, 2500);
+                ionicToast.show(error, 'bottom', false, 3500);
             });
     };
 
@@ -339,12 +344,12 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
             TimeSheetEntryFactory.getAssignedProjectsByClients(obj)
                 .then(function(success) {
                     if (success.status == 500) {
-                        ionicToast.show(success.data, 'bottom', false, 2500)
+                        ionicToast.show(success.data, 'bottom', false, 3500)
                     } else {
                         $scope.projects = success.data.results;
                     }
                 }, function(error) {
-                    ionicToast.show(error, 'bottom', false, 2500);
+                    ionicToast.show(error, 'bottom', false, 3500);
                 });
         }
     };
@@ -361,12 +366,12 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
             TimeSheetEntryFactory.getAssignedTasks(obj)
                 .then(function(success) {
                     if (success.status == 500) {
-                        ionicToast.show(success.data, 'bottom', false, 2500)
+                        ionicToast.show(success.data, 'bottom', false, 3500)
                     } else {
                         $scope.tasks = success.data.results;
                     }
                 }, function(error) {
-                    ionicToast.show(error, 'bottom', false, 2500);
+                    ionicToast.show(error, 'bottom', false, 3500);
                 });
         }
     };
@@ -376,12 +381,12 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         TimeSheetEntryFactory.getWorkType()
             .then(function(success) {
                 if (success.status == 500) {
-                    ionicToast.show(success.data, 'bottom', false, 2500)
+                    ionicToast.show(success.data, 'bottom', false, 3500)
                 } else {
                     $scope.workTypes = success.data.results;
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', false, 2500);
+                ionicToast.show(error, 'bottom', false, 3500);
             });
     };
 
@@ -390,12 +395,12 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         TimeSheetEntryFactory.getCostCenter()
             .then(function(success) {
                 if (success.status == 500) {
-                    ionicToast.show(success.data, 'bottom', false, 2500)
+                    ionicToast.show(success.data, 'bottom', false, 3500)
                 } else {
                     $scope.costCenters = success.data.results;
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', false, 2500);
+                ionicToast.show(error, 'bottom', false, 3500);
             });
     };
 
@@ -477,7 +482,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
             var h = parseInt(newValue / 60);
             var m = parseInt(newValue % 60);
             if (h > 24 || m > 60) {
-                ionicToast.show('Hours cannot be more than 24. Minutes cannot be more than 60.', 'bottom', false, 2500);
+                ionicToast.show('Hours cannot be more than 24. Minutes cannot be more than 60.', 'bottom', false, 3500);
                 $scope.durationPicker.minutes = oldValue;
             } else {
                 obj.Duration = h + ":" + m;
@@ -518,7 +523,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
     $scope.toggleManualEntry = function() {
         $scope.enableManualEntry = !$scope.enableManualEntry;
         if ($scope.enableManualEntry == true) {
-            ionicToast.show('Please select your Start and End Eime and then tap on Add', 'bottom', false, 2500);
+            ionicToast.show('Please select your Start and End Eime and then tap on Add', 'bottom', false, 3500);
         }
     };
 });

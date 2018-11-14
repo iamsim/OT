@@ -7,7 +7,7 @@ angular.module('officeTimerApp').controller('HomeController', function($scope, $
     };
 
     $scope.others = function() {
-        ionicToast.show('This feature will be out in the next release', 'bottom', false, 2500);
+        ionicToast.show('This feature will be out in the next release', 'bottom', false, 3500);
     };
 
     $scope.logout = function() {

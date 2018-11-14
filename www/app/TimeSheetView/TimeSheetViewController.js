@@ -69,7 +69,7 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
                     $scope.getTimesheetWorkingDaysWithHours(obj);
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', false, 2500);
+                ionicToast.show(error, 'bottom', false, 3500);
             });
     };
 
@@ -84,7 +84,7 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
                     $scope.markTimeSheetOnCalendar();
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', false, 2500);
+                ionicToast.show(error, 'bottom', false, 3500);
             });
     };
 
@@ -118,11 +118,11 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
                     if ($scope.timeEntries.length > 0) {
                         $scope.getTotalHours(obj);
                     } else {
-                        ionicToast.show('No entries for this particular date', 'bottom', false, 2500);
+                        ionicToast.show('No entries for this particular date', 'bottom', false, 3500);
                     }
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', false, 2500);
+                ionicToast.show(error, 'bottom', false, 3500);
             });
     };
 
@@ -137,7 +137,7 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
                     $scope.totalHours = success.data.GetTimeEntriesByEmployeeIdAndDateRangeForTotalHoursAdvancedResult;
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', false, 2500);
+                ionicToast.show(error, 'bottom', false, 3500);
             });
     };
 
@@ -149,21 +149,21 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
 
     $scope.submit = function() {
         if ($scope.timeEntries.length == 0) {
-            ionicToast.show('Cannot submit an empty Timesheet. Add some time entries before submitting!', 'bottom', false, 2500);
+            ionicToast.show('Cannot submit an empty Timesheet. Add some time entries before submitting!', 'bottom', false, 3500);
         } else {
             var hoursPerWeek = 0;
             for (var i = 0; i < $scope.timesheetWorkingDaysWithHours.length; i++) {
                 var hours = parseInt($scope.timesheetWorkingDaysWithHours[i].TotalHours.split(":")[0]);
                 if (hours < parseInt($scope.timesheetPreferences.MinimumHoursPerDay) || hours > parseInt($scope.timesheetPreferences.MaximumHoursPerDay)) {
                     var message = 'Daily working hours cannot be less than ' + $scope.timesheetPreferences.MinimumHoursPerDay + ' hours or more than ' + $scope.timesheetPreferences.MaximumHoursPerDay + ' hours';
-                    ionicToast.show(message, 'bottom', false, 2500);
+                    ionicToast.show(message, 'bottom', false, 3500);
                 } else {
                     hoursPerWeek += hours;
                 }
             }
             if (hoursPerWeek < parseInt($scope.timesheetPreferences.MinimumHoursPerWeek) || hoursPerWeek > parseInt($scope.timesheetPreferences.MaximumHoursPerWeek)) {
                 var message = 'Weekly working hours cannot be less than ' + $scope.timesheetPreferences.MinimumHoursPerWeek + ' hours or more than ' + $scope.timesheetPreferences.MaximumHoursPerWeek + ' hours';
-                ionicToast.show(message, 'bottom', false, 2500);
+                ionicToast.show(message, 'bottom', false, 3500);
             } else {
                 var confirmPopup = $ionicPopup.confirm({
                     title: 'Submit Times',
@@ -180,11 +180,11 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
                                     $scope.errorMessage = success.data;
                                 } else {
                                     $scope.errorMessage = null;
-                                    ionicToast.show('Timesheet submitted successfully', 'bottom', false, 2500);
+                                    ionicToast.show('Timesheet submitted successfully', 'bottom', false, 3500);
                                     $scope.getTimeSheetPeriod($scope.timeSheetSelectedTime.format("YYYY"), $scope.timeSheetSelectedTime.format("MM"), $scope.timeSheetSelectedTime.format("DD"));
                                 }
                             }, function(error) {
-                                ionicToast.show(error, 'bottom', false, 2500);
+                                ionicToast.show(error, 'bottom', false, 3500);
                             });
                     } else {
                         console.log('You are not sure');
@@ -198,13 +198,13 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
         TimeSheetEntryFactory.getTimeSheetPreferences()
             .then(function(success) {
                 if (success.status == 500) {
-                    ionicToast.show(success.data, 'bottom', false, 2500)
+                    ionicToast.show(success.data, 'bottom', false, 3500)
                 } else {
                     $scope.timesheetPreferences = success.data.results[0];
                     TimeSheetViewFactory.timesheetPreferences = success.data.results[0];
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', false, 2500);
+                ionicToast.show(error, 'bottom', false, 3500);
             });
     };
 

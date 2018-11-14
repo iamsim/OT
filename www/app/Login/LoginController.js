@@ -15,7 +15,7 @@ angular.module('officeTimerApp').controller('LoginController', function($scope, 
 
     $scope.login = function() {
         if ($scope.loginData.username == "" || $scope.loginData.password == "") {
-            ionicToast.show("Please enter username and password", 'bottom', false, 2500);
+            ionicToast.show("Please enter username and password", 'bottom', false, 3500);
         } else {
             LoginFactory.login($scope.loginData)
                 .then(function(success) {
@@ -27,7 +27,7 @@ angular.module('officeTimerApp').controller('LoginController', function($scope, 
                         $scope.getAccountId();
                     }
                 }, function(error) {
-                    ionicToast.show(error, 'bottom', false, 2500);
+                    ionicToast.show(error, 'bottom', false, 3500);
                 });
         }
     };
@@ -42,7 +42,7 @@ angular.module('officeTimerApp').controller('LoginController', function($scope, 
                     $scope.getAccountEmployeeId();
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', false, 2500);
+                ionicToast.show(error, 'bottom', false, 3500);
             });
     };
 
@@ -56,7 +56,7 @@ angular.module('officeTimerApp').controller('LoginController', function($scope, 
                     $state.go('home');
                 }
             }, function(error) {
-                ionicToast.show(error, 'bottom', false, 2500);
+                ionicToast.show(error, 'bottom', false, 3500);
             });
     };
 
