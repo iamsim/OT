@@ -164,10 +164,10 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         });
 
         $timeout(function() {
-            if ($scope.selected.totalHours != "0:0") {
-                $scope.selected.totalHours = "0:0";
-                $scope.durationPicker.minutes = 0;
-            }
+            // if ($scope.selected.totalHours != "0:0") {
+            //     $scope.selected.totalHours = "0:0";
+            //     $scope.durationPicker.minutes = 0;
+            // }
             $scope.timerState = 'running';
             $scope.$broadcast('timer-start');
             $scope.currentRunningTime.Start = new Date();
