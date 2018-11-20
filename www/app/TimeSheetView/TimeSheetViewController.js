@@ -38,10 +38,12 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
     };
 
     $scope.$watch('calendar.currentDate', function(newTime, oldTime) {
-        TimeSheetViewFactory.timeSheetEntryDate = newTime;
-        $scope.timeSheetSelectedTime = moment(newTime);
-        $scope.getTimeSheetPeriod(moment(newTime).format("YYYY"), moment(newTime).format("MM"), moment(newTime).format("DD"));
-        $scope.getTimeEntries(newTime);
+        if (newTime != oldTime) {
+            TimeSheetViewFactory.timeSheetEntryDate = newTime;
+            $scope.timeSheetSelectedTime = moment(newTime);
+            $scope.getTimeSheetPeriod(moment(newTime).format("YYYY"), moment(newTime).format("MM"), moment(newTime).format("DD"));
+            $scope.getTimeEntries(newTime);
+        }
     });
 
     $scope.enterTimeSheet = function() {
@@ -101,6 +103,9 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
             });
         }
         $scope.calendar.eventSource = events;
+
+        //second set of apis
+        $scope.getTimeEntries($scope.calendar.currentDate);
     };
 
     $scope.getTimeEntries = function(selectedTime) {
@@ -120,6 +125,8 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
                     } else {
                         ionicToast.show('No entries for this particular date', 'bottom', false, 3500);
                     }
+                    // third set of apis
+                    $scope.getTimesheetPreferences();
                 }
             }, function(error) {
                 ionicToast.show(error, 'bottom', false, 3500);
@@ -214,6 +221,5 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
     };
 
     $scope.getTimeSheetPeriod($scope.timeSheetSelectedTime.format("YYYY"), $scope.timeSheetSelectedTime.format("MM"), $scope.timeSheetSelectedTime.format("DD"));
-    $scope.getTimeEntries($scope.calendar.currentDate);
-    $scope.getTimesheetPreferences();
+
 });
