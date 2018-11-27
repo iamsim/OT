@@ -17,7 +17,7 @@ angular.module('officeTimerApp').factory("LoginFactory", function($q, $http) {
         }
     };
 
-    var website = 'http://198.38.93.22:8080';
+    var website = 'http://198.38.88.218:8080';
     var URL = website;
 
     factory.login = function(obj) {
