@@ -266,6 +266,12 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         if ($scope.timepicked.Duration.indexOf('-') != -1) {
             ionicToast.show("Duration cannot be in negative value", 'bottom', false, 3500);
         } else if ($scope.timepicked.Duration != "0:0") {
+            //clear the durationpicker and total hours
+            if ($scope.durationPicker.minutes != 0) {
+                $scope.durationPicker.minutes = 0;
+                $scope.selected.totalHours = "0:0";
+            }
+            //proceed with the addition of time log
             var obj = angular.copy($scope.timepicked);
             $scope.loggedInTimes.push(obj);
             $scope.calculateTotalHours(obj, 'add');
@@ -446,6 +452,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         $scope.isEdit = true;
         TimeSheetViewFactory.selectedTimeEntry = null;
         //fill values
+        $scope.selected.date = $scope.selected.timeSheetEntry.TimeEntryDate;
         $scope.selected.clientId = $scope.selected.timeSheetEntry.ClientId;
         $scope.selected.projectId = $scope.selected.timeSheetEntry.ProjectId;
         $scope.selected.taskId = $scope.selected.timeSheetEntry.TaskId;
@@ -455,6 +462,9 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
         $scope.selected.description = $scope.selected.timeSheetEntry.Description;
         $scope.selected.totalHours = moment($scope.selected.timeSheetEntry.TotalTime).format("HH:mm");
         $scope.loggedInTimes = ($scope.selected.timeSheetEntry.TimeLog == "") ? [] : fillTimeLog($scope.selected.timeSheetEntry.TimeLog);
+        if ($scope.selected.timeSheetEntry.TimeLog == "") {
+            $scope.durationPicker.minutes = (new Date($scope.selected.timeSheetEntry.TotalTime).getHours() * 60) + (new Date($scope.selected.timeSheetEntry.TotalTime).getMinutes());
+        }
         $scope.getAssignedProjectsByClients($scope.selected.clientId);
         $scope.getAssignedTasks($scope.selected.projectId);
     }

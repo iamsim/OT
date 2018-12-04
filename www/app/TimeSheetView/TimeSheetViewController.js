@@ -38,12 +38,12 @@ angular.module('officeTimerApp').controller('TimeSheetViewController', function(
     };
 
     $scope.$watch('calendar.currentDate', function(newTime, oldTime) {
-        if (newTime != oldTime) {
-            TimeSheetViewFactory.timeSheetEntryDate = newTime;
-            $scope.timeSheetSelectedTime = moment(newTime);
-            $scope.getTimeSheetPeriod(moment(newTime).format("YYYY"), moment(newTime).format("MM"), moment(newTime).format("DD"));
-            $scope.getTimeEntries(newTime);
-        }
+        // if (newTime != oldTime) {
+        TimeSheetViewFactory.timeSheetEntryDate = newTime;
+        $scope.timeSheetSelectedTime = moment(newTime);
+        $scope.getTimeSheetPeriod(moment(newTime).format("YYYY"), moment(newTime).format("MM"), moment(newTime).format("DD"));
+        $scope.getTimeEntries(newTime);
+        // }
     });
 
     $scope.enterTimeSheet = function() {
