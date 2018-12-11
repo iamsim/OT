@@ -200,6 +200,10 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
             $scope.currentRunningTime.Stop = new Date();
             $scope.currentRunningTime.Duration = data.hours + ":" + data.minutes;
             console.log($scope.currentRunningTime);
+            if ($scope.selected.totalHours != "0:0" && $scope.loggedInTimes.length == 0) {
+                $scope.selected.totalHours = "0:0";
+                $scope.durationPicker.minutes = 0;
+            }
             $scope.loggedInTimes.push($scope.currentRunningTime);
             $scope.calculateTotalHours($scope.currentRunningTime, 'add');
             $scope.currentRunningTime = {
@@ -514,7 +518,7 @@ angular.module('officeTimerApp').controller('TimeSheetEntryController', function
             $scope.selected.totalHours != "0:0") {
             var confirmPopup = $ionicPopup.confirm({
                 title: 'Attention',
-                template: 'You have unsaved data in this entry. If you choose to go back, your changes will be discarded. Are you sure you want to go back?'
+                template: 'You have unsaved data on this page. Leave without saving?'
             });
 
             confirmPopup.then(function(res) {
